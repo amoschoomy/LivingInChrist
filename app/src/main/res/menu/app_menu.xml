@@ -8,5 +8,9 @@
         android:title="Night Mode"
         app:actionLayout="@layout/switch_item"
         app:showAsAction="always"
-        />
+        ></item>
+    <item
+        android:id="@+id/gplayrating"
+        android:title="Rate Us"
+        app:showAsAction="never" />
 </menu>
