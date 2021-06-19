@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Living In Christ</string>
+    <string name="open_menu">Opened Menu</string>
+    <string name="close_menu">Closed Menu</string>
 </resources>
