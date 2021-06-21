@@ -2,4 +2,8 @@
     <string name="app_name">Living In Christ</string>
     <string name="open_menu">Opened Menu</string>
     <string name="close_menu">Closed Menu</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
