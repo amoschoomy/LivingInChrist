@@ -1,18 +1,16 @@
 package com.amoschoojs.livinginchrist
 
 import android.os.Bundle
-import android.util.Log
+import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.Chronometer
 import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
-import java.util.*
 import kotlin.collections.ArrayList
 
 // TODO: Rename parameter arguments, choose names that match
@@ -27,25 +25,30 @@ private const val ARG_PARAM2 = "param2"
  */
 class CounterFragment : Fragment() {
     // TODO: Rename and change types of
-    private lateinit var param1:ArrayList<Int>
+    private lateinit var param1: ArrayList<String>
+    private var countStarted:Boolean=false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if (!activity?.getSharedPreferences("abc",0)?.contains("history")!!){
             val gson = Gson()
             val arrayString=gson.toJson(ArrayList<Int>())
-            val arrayType: Type =object: TypeToken<ArrayList<Int?>?>(){}.type
+            val arrayType: Type =object: TypeToken<ArrayList<String?>?>(){}.type
             activity?.getSharedPreferences("abc",0)?.edit()?.putString("history",arrayString)?.apply()
-            param1=gson.fromJson<ArrayList<Int>>(
+            param1=gson.fromJson<ArrayList<String>>(
                 activity?.getSharedPreferences("abc",0)!!.getString("history","[]"),arrayType)
         }
         else{
            val array= activity?.getSharedPreferences("abc",0)?.getString("history","[]")
-            val arrayType: Type =object: TypeToken<ArrayList<Int?>?>(){}.type
-            val gson:Gson=Gson()
-            param1=gson.fromJson<ArrayList<Int>>(array,arrayType)
+            val arrayType: Type =object: TypeToken<ArrayList<String?>?>(){}.type
+            val gson=Gson()
+            param1=gson.fromJson(array,arrayType)
 
         }
+
         super.onCreate(savedInstanceState)
+
+        countStarted= requireActivity().getSharedPreferences("abc",0).getBoolean("countstatus",false)
     }
 
     override fun onCreateView(
@@ -60,12 +63,36 @@ class CounterFragment : Fragment() {
 
 
         super.onViewCreated(view, savedInstanceState)
-        val streakButton:Button=view.findViewById(R.id.countstreak)
-        val duration:Int=Integer.parseInt(view.findViewById<TextView>(R.id.duration).text.toString())
-        streakButton.setOnClickListener {
-                param1.add(duration)
-        }
+
+
     }
+
+    private fun chronometerHandler(view: View){
+        val duration=view.findViewById<Chronometer>(R.id.duration)
+        duration.format="Time elapsed %s"
+        duration.base=SystemClock.elapsedRealtime()
+        val resetButton=view.findViewById<Button>(R.id.reset)
+        val startButton=view.findViewById<Button>(R.id.countstreak)
+        if(countStarted){
+            resetButton.visibility=View.INVISIBLE
+        }
+
+        startButton.setOnClickListener {
+            if(!countStarted){
+                duration.start()
+                countStarted=true
+            }
+
+        }
+
+        resetButton.setOnClickListener {
+            duration.stop()
+            param1.add(duration.toString())
+            duration.base=SystemClock.elapsedRealtime()
+        }
+
+    }
+
 
     override fun onPause() {
         val gson = Gson()
@@ -74,6 +101,11 @@ class CounterFragment : Fragment() {
         sharedPreferencesEditor?.putString("history",arrayString)
         sharedPreferencesEditor?.apply()
         super.onPause()
+    }
+
+    override fun onStop() {
+        activity?.getSharedPreferences("abc",0)?.edit()?.putBoolean("countstatus",countStarted)?.apply()
+        super.onStop()
     }
 
     companion object {

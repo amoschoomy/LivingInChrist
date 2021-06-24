@@ -24,12 +24,9 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class HistoryFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: ArrayList<Int>? = null
-    private var param2: String? = null
-    private lateinit var arrayList:ArrayList<Int>
+    private lateinit var arrayList:ArrayList<String>
     private lateinit var recyclerViewAdapter:RecyclerViewAdapter
-    private val arrayType: Type =object: TypeToken<ArrayList<Int?>?>(){}.type
+    private val arrayType: Type =object: TypeToken<ArrayList<String?>?>(){}.type
     private val gson=Gson()
 
     override fun onCreateView(

@@ -11,7 +11,7 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/textfill"
+            android:id="@+id/streaktext"
             android:layout_width="0dp"
             android:layout_height="200dp"
             android:layout_marginTop="16dp"
@@ -21,27 +21,42 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <Chronometer
             android:id="@+id/duration"
             android:layout_width="0dp"
             android:layout_height="200dp"
             android:layout_marginTop="32dp"
-            android:text="0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textfill" />
+            app:layout_constraintTop_toBottomOf="@+id/streaktext" />
 
         <Button
             android:id="@+id/countstreak"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="64dp"
+            android:text="Start"
+            app:layout_constraintBaseline_toBaselineOf="@+id/reset"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/reset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="128dp"
-            android:text="Start"
+            android:layout_marginEnd="64dp"
+            android:text="Reset"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/duration" />
+            app:layout_constraintHorizontal_bias="0.674"
+            app:layout_constraintStart_toEndOf="@+id/countstreak"
+            app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="500dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

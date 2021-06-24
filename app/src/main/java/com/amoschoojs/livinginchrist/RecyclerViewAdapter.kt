@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class RecyclerViewAdapter(private val dataSet: ArrayList<Int>) :
+class RecyclerViewAdapter(private val dataSet: ArrayList<String>) :
     RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
 

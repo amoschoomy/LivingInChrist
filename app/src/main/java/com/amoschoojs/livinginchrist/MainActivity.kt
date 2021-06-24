@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
         if (!getSharedPreferences("abc,",0).contains("history")){
             val gson = Gson()
-            val arrayString=gson.toJson(ArrayList<Int>())
+            val arrayString=gson.toJson(ArrayList<String>())
             getSharedPreferences("abc",0).edit().putString("history",arrayString).apply()
         }
 
