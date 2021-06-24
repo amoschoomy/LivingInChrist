@@ -23,7 +23,7 @@ class RecyclerViewAdapter(private val dataSet: ArrayList<String>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.streakCount.text = dataSet[position].toString()+": days ofouswdevfinkdsfc,dlndcswisdxnciwnxkkkkkkkkkkkkkkkntgfdssdv"
+        holder.streakCount.text = dataSet[position]+" completed"
     }
 
     override fun getItemCount(): Int {

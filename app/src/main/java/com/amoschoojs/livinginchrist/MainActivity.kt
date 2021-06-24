@@ -34,10 +34,11 @@ class MainActivity : AppCompatActivity() {
         navigationView.setNavigationItemSelectedListener(CustomNavigationViewListener(this))
         cardViewListener()
 
-        if (!getSharedPreferences("abc,",0).contains("history")){
+        val sharedPreferences:SharedPreferences=getSharedPreferences("abc",0)
+        if (!sharedPreferences.contains("history")){
             val gson = Gson()
             val arrayString=gson.toJson(ArrayList<String>())
-            getSharedPreferences("abc",0).edit().putString("history",arrayString).apply()
+            sharedPreferences.edit().putString("history",arrayString).apply()
         }
 
 

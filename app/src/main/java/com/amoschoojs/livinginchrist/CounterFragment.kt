@@ -2,6 +2,7 @@ package com.amoschoojs.livinginchrist
 
 import android.os.Bundle
 import android.os.SystemClock
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,34 +62,35 @@ class CounterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-
         super.onViewCreated(view, savedInstanceState)
+        chronometerHandler(view)
 
 
     }
 
     private fun chronometerHandler(view: View){
         val duration=view.findViewById<Chronometer>(R.id.duration)
-        duration.format="Time elapsed %s"
-        duration.base=SystemClock.elapsedRealtime()
         val resetButton=view.findViewById<Button>(R.id.reset)
         val startButton=view.findViewById<Button>(R.id.countstreak)
         if(countStarted){
-            resetButton.visibility=View.INVISIBLE
+            resetButton.isClickable=false
         }
 
         startButton.setOnClickListener {
             if(!countStarted){
                 duration.start()
+                duration.base=SystemClock.elapsedRealtime()
                 countStarted=true
+                resetButton.isClickable=true
             }
 
         }
 
         resetButton.setOnClickListener {
             duration.stop()
-            param1.add(duration.toString())
+            param1.add(duration.text.toString())
             duration.base=SystemClock.elapsedRealtime()
+            countStarted=false
         }
 
     }
