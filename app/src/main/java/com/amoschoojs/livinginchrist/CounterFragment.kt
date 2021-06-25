@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
-import kotlin.collections.ArrayList
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -49,7 +48,8 @@ class CounterFragment : Fragment() {
 
         super.onCreate(savedInstanceState)
 
-        countStarted= requireActivity().getSharedPreferences("abc",0).getBoolean("countstatus",false)
+        val sharedPreferences=requireActivity().getSharedPreferences("abc",0)
+        countStarted=sharedPreferences.getBoolean("countstatus",false)
     }
 
     override fun onCreateView(
@@ -64,24 +64,34 @@ class CounterFragment : Fragment() {
 
         super.onViewCreated(view, savedInstanceState)
         chronometerHandler(view)
-
-
     }
+
 
     private fun chronometerHandler(view: View){
         val duration=view.findViewById<Chronometer>(R.id.duration)
+        val sharedPreferences=activity?.getSharedPreferences("abc",0)
+        val current=System.currentTimeMillis()
+        val calc=SystemClock.elapsedRealtime()-(current- sharedPreferences?.getLong("startTime",current)!!)
+
         val resetButton=view.findViewById<Button>(R.id.reset)
         val startButton=view.findViewById<Button>(R.id.countstreak)
         if(countStarted){
-            resetButton.isClickable=false
+            duration.base=calc
+            resetButton.isEnabled=true
+            startButton.isEnabled=false
+            duration.start()
         }
 
         startButton.setOnClickListener {
+            Log.e("TEST","clicked start button")
             if(!countStarted){
-                duration.start()
                 duration.base=SystemClock.elapsedRealtime()
+                duration.start()
+                val start=System.currentTimeMillis()
+                sharedPreferences.edit()?.putLong("startTime",start)?.apply()
                 countStarted=true
-                resetButton.isClickable=true
+                resetButton.isEnabled=true
+                startButton.isEnabled=false
             }
 
         }
@@ -91,6 +101,8 @@ class CounterFragment : Fragment() {
             param1.add(duration.text.toString())
             duration.base=SystemClock.elapsedRealtime()
             countStarted=false
+            resetButton.isEnabled=false
+            startButton.isEnabled=true
         }
 
     }
@@ -99,14 +111,25 @@ class CounterFragment : Fragment() {
     override fun onPause() {
         val gson = Gson()
         val arrayString=gson.toJson(param1)
-        val sharedPreferencesEditor=activity?.getSharedPreferences("abc",0)?.edit()
+        val sharedPreferences=activity?.getSharedPreferences("abc",0)
+        val sharedPreferencesEditor=sharedPreferences?.edit()
+        var deleted=sharedPreferences?.getBoolean("clearedHistory",false)
+        if(!deleted!!){
         sharedPreferencesEditor?.putString("history",arrayString)
         sharedPreferencesEditor?.apply()
+        }
+        else{
+            param1=ArrayList()
+            sharedPreferencesEditor?.putBoolean("clearedHistory",false)?.apply()
+        }
         super.onPause()
     }
 
     override fun onStop() {
-        activity?.getSharedPreferences("abc",0)?.edit()?.putBoolean("countstatus",countStarted)?.apply()
+        val duration=view?.findViewById<Chronometer>(R.id.duration)
+        val sharedPreferencesEditor=activity?.getSharedPreferences("abc",0)?.edit()
+        sharedPreferencesEditor?.putBoolean("countstatus",countStarted)?.apply()
+        sharedPreferencesEditor?.putString("currentTime",duration?.text.toString())?.apply()
         super.onStop()
     }
 

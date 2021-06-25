@@ -1,5 +1,6 @@
 package com.amoschoojs.livinginchrist
 
+import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,6 +10,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
@@ -39,12 +43,31 @@ class HistoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        updateAdapter()
+//        updateAdapter()
+        val sharedPreferences=activity?.getSharedPreferences("abc",0)
+        val deleteHistory: FloatingActionButton = view.findViewById(R.id.deletefab)
+        deleteHistory.setOnClickListener {
 
+            activity?.let { it1 ->
+                MaterialAlertDialogBuilder(it1).setTitle("Delete Confirmation").
+                    setMessage("Are you sure you want to delete the history?").setPositiveButton("Yes",)
+                { _, _ ->
+                    run {
+                        arrayList.clear()
+                        val array=gson.toJson(arrayList)
+                        val editor=sharedPreferences?.edit()?.putString("history",array)?.putBoolean("clearedHistory",true)
+                        editor?.apply()
+                        updateAdapter()
+                        Snackbar.make(view, "Deleted successfully", Snackbar.LENGTH_SHORT).show()
+                    }
+                }.setNegativeButton("Cancel"){ _, _ ->}   .show() }
+
+        }
     }
 
     override fun setMenuVisibility(menuVisible: Boolean) {
         super.setMenuVisibility(menuVisible)
+        Log.e("TEST","Update adapter")
         updateAdapter()
 
     }
@@ -53,6 +76,7 @@ class HistoryFragment : Fragment() {
         val sharedPreferences=activity?.getSharedPreferences("abc",0)
         val array=sharedPreferences?.getString("history","[]")
         arrayList=gson.fromJson(array,arrayType)
+        Log.e("TEST",arrayList.toString())
         val linearLayoutManager=LinearLayoutManager(requireContext())
         val recyclerView:RecyclerView?=view?.findViewById(R.id.recview)
         recyclerView?.layoutManager=linearLayoutManager
