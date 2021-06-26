@@ -1,10 +1,12 @@
 package com.amoschoojs.livinginchrist
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -19,6 +21,7 @@ private const val ARG_PARAM2 = "param2"
 class PlanFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
+    private lateinit var sharedPreferences: SharedPreferences
     private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +30,8 @@ class PlanFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        sharedPreferences= activity?.getSharedPreferences("abc",0)!!
+
     }
 
     override fun onCreateView(
@@ -35,6 +40,16 @@ class PlanFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_plan, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        activity?.let {
+            MaterialAlertDialogBuilder(it).setTitle("How to Use")
+                .setMessage(R.string.popup_plan).setNegativeButton("OK and DON'T SHOW AGAIN") { _, _ ->
+                    sharedPreferences.edit().putBoolean("showplanmessage", false).apply()
+                }.setPositiveButton("OK") { _, _ -> }.show()
+        }
     }
 
     companion object {

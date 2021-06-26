@@ -9,4 +9,8 @@
     <string name="title_activity_main2">MainActivity2</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
+    <string name="popup_plan">This is the page for your daily plans in your life.
+    At 12am sharp everyday, the checkboxes will reset. Do these activities at your own time in 24 hours.
+        No pressure. If you successfully complete all checkboxes on time, it will be recorded to your score below.
+        At the end of the day, it is just a score. Do not worry. This is just to motivate you &#x1F64F;</string>
 </resources>
