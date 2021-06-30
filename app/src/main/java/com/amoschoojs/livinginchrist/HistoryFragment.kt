@@ -1,6 +1,5 @@
 package com.amoschoojs.livinginchrist
 
-import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -67,7 +66,6 @@ class HistoryFragment : Fragment() {
 
     override fun setMenuVisibility(menuVisible: Boolean) {
         super.setMenuVisibility(menuVisible)
-        Log.e("TEST","Update adapter")
         updateAdapter()
 
     }
