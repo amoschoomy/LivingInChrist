@@ -4,7 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.shape.MaterialShapeDrawable
 
 class BookStudyAdapter(private val qnas:ArrayList<QnAModel>):RecyclerView.Adapter<BookStudyAdapter.ViewHolder>() {
 
@@ -28,6 +31,22 @@ class BookStudyAdapter(private val qnas:ArrayList<QnAModel>):RecyclerView.Adapte
 
         val qtv=holder.question
         val atv=holder.answer
+        val context=qtv.context
+
+        val shapeDrawable= MaterialShapeDrawable()
+        shapeDrawable.fillColor= ContextCompat.getColorStateList(context,android.R.color.transparent)
+        shapeDrawable.setStroke(4.0f, ContextCompat.getColor(context,R.color.light_blue_A200))
+        ViewCompat.setBackground(qtv,shapeDrawable);
+
+        val shapeDrawable2=MaterialShapeDrawable()
+        shapeDrawable2.fillColor= ContextCompat.getColorStateList(context,android.R.color.transparent)
+        shapeDrawable2.setStroke(4.0f, ContextCompat.getColor(context,
+            R.color.light_yellow
+        ))
+        ViewCompat.setBackground(atv,shapeDrawable2);
+
+
+
         qtv.text=qna.question
         atv.text=qna.answer
 

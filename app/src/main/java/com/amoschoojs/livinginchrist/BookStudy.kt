@@ -9,8 +9,7 @@ import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
 class BookStudy : AppCompatActivity() {
-    private val arrayType: Type =object: TypeToken<ArrayList<String?>?>(){}.type
-    private val gson= Gson()
+
     private lateinit var books:Array<String>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

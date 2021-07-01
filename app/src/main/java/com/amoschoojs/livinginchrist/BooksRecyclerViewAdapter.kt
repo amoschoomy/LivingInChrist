@@ -1,5 +1,6 @@
 package com.amoschoojs.livinginchrist
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,11 +34,17 @@ class BooksRecyclerViewAdapter(private val array:Array<String>):RecyclerView.Ada
     override fun onBindViewHolder(holder: BooksRecyclerViewAdapter.ViewHolder, position: Int) {
         val book=array[holder.adapterPosition]
         val textView=holder.bookView
+        val context=textView.context
         val shapeDrawable=MaterialShapeDrawable()
-        shapeDrawable.fillColor=ContextCompat.getColorStateList(textView.context,android.R.color.transparent)
-        shapeDrawable.setStroke(1.0f, ContextCompat.getColor(textView.context,R.color.light_blue_A200));
-        ViewCompat.setBackground(textView,shapeDrawable);
+        shapeDrawable.fillColor=ContextCompat.getColorStateList(context,android.R.color.transparent)
+        shapeDrawable.setStroke(1.0f, ContextCompat.getColor(context,R.color.light_blue_A200));
+        ViewCompat.setBackground(textView,shapeDrawable)
         textView.text=book
+        textView.setOnClickListener {
+            val i=Intent(context,SpecificBook::class.java)
+            i.putExtra("whatBook",book)
+            context.startActivity(i)
+        }
     }
 
     override fun getItemCount(): Int {
