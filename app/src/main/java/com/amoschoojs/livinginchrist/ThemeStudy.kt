@@ -1,16 +1,21 @@
 package com.amoschoojs.livinginchrist
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import android.content.Context
+import android.util.Log
+import android.view.View
 import android.widget.*
+import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import org.w3c.dom.Text
 import java.lang.reflect.Type
+
 
 class AlertDialogStudy {
     companion object{
@@ -36,6 +41,7 @@ class AlertDialogStudy {
             }
             else{
                 arrayList.add(titleBox.text.toString())
+                Log.e("TEST",titleBox.text.toString())
                 sharedPreferencesEditor.putString(titleBox.text.toString(),contentBox.text.toString()).apply()
                 alertDialogBuilder.dismiss()
             }
@@ -76,29 +82,101 @@ class ThemeStudy : AppCompatActivity() {
         var arrayString=sharedPreferences.getString("arraypeace","[]")
         arrayPeace=gson.fromJson(arrayString,arrayType)
 
+
         arrayString=sharedPreferences.getString("arraylove","[]")
         arrayLove=gson.fromJson(arrayString,arrayType)
+
         arrayString=sharedPreferences.getString("arrayfaith","[]")
         arrayFaith=gson.fromJson(arrayString,arrayType)
+
         arrayString=sharedPreferences.getString("arraykindness","[]")
         arrayKindness=gson.fromJson(arrayString,arrayType)
+
         arrayString=sharedPreferences.getString("arrayselfcontrol","[]")
         arraySelfControl=gson.fromJson(arrayString,arrayType)
 
         peaceAdapter=ArrayAdapter(this,R.layout.support_simple_spinner_dropdown_item,arrayPeace)
         peaceSpinner.adapter=peaceAdapter
 
+        Log.e("TEST","Set up peace adapter")
+        peaceSpinner.onItemSelectedListener=object : OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    val peaceNote:TextView=findViewById(R.id.peacenote)
+                    val textContent=sharedPreferences.getString(parent?.getItemAtPosition(position) as String?,"")
+                    peaceNote.text=textContent
+            }
+
+        }
+
+
+
         loveAdapter=ArrayAdapter(this,R.layout.support_simple_spinner_dropdown_item,arrayLove)
         loveSpinner.adapter=loveAdapter
+
+        loveSpinner.onItemSelectedListener=object : OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val peaceNote:TextView=findViewById(R.id.lovenote)
+                val textContent=sharedPreferences.getString(parent?.getItemAtPosition(position) as String?,"")
+                peaceNote.text=textContent
+            }
+
+        }
 
         faithAdapter=ArrayAdapter(this,R.layout.support_simple_spinner_dropdown_item,arrayFaith)
         faithSpinner.adapter=faithAdapter
 
+        faithSpinner.onItemSelectedListener=object : OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val peaceNote:TextView=findViewById(R.id.faithnote)
+                val textContent=sharedPreferences.getString(parent?.getItemAtPosition(position) as String?,"")
+                peaceNote.text=textContent
+            }
+
+        }
+
         kindnessAdapter=ArrayAdapter(this,R.layout.support_simple_spinner_dropdown_item,arrayKindness)
         kindnessSpinner.adapter=kindnessAdapter
 
+        kindnessSpinner.onItemSelectedListener=object : OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val peaceNote:TextView=findViewById(R.id.kindnessnote)
+                val textContent=sharedPreferences.getString(parent?.getItemAtPosition(position) as String?,"")
+                peaceNote.text=textContent
+            }
+
+        }
+
         selfControlAdapter=ArrayAdapter(this,R.layout.support_simple_spinner_dropdown_item,arraySelfControl)
         selfControlSpinner.adapter=selfControlAdapter
+
+        selfControlSpinner.onItemSelectedListener=object : OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val peaceNote:TextView=findViewById(R.id.selfcontrolnote)
+                val textContent=sharedPreferences.getString(parent?.getItemAtPosition(position) as String?,"")
+                peaceNote.text=textContent
+            }
+
+        }
 
 
         addButtonsAction()
@@ -130,5 +208,19 @@ class ThemeStudy : AppCompatActivity() {
 
         addSelfControl.setOnClickListener { AlertDialogStudy.showDialogStudy(this,arraySelfControl)
         selfControlAdapter.notifyDataSetChanged()}
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        editor.putString("arraypeace",gson.toJson(arrayPeace))
+        editor.putString("arraylove",gson.toJson(arrayLove))
+        editor.putString("arraykindess",gson.toJson(arrayKindness))
+        editor.putString("arrayfaith",gson.toJson(arrayFaith))
+        editor.putString("arrayselfcontrol",gson.toJson(arraySelfControl))
+
+        editor.apply()
+
+
     }
 }

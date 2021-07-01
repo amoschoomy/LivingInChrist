@@ -42,7 +42,6 @@ class HistoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        updateAdapter()
         val sharedPreferences=activity?.getSharedPreferences("abc",0)
         val deleteHistory: FloatingActionButton = view.findViewById(R.id.deletefab)
         deleteHistory.setOnClickListener {
@@ -74,7 +73,6 @@ class HistoryFragment : Fragment() {
         val sharedPreferences=activity?.getSharedPreferences("abc",0)
         val array=sharedPreferences?.getString("history","[]")
         arrayList=gson.fromJson(array,arrayType)
-        Log.e("TEST",arrayList.toString())
         val linearLayoutManager=LinearLayoutManager(requireContext())
         val recyclerView:RecyclerView?=view?.findViewById(R.id.recview)
         recyclerView?.layoutManager=linearLayoutManager
