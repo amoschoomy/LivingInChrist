@@ -13,4 +13,6 @@
     At 12am sharp everyday, the checkboxes will reset. Do these activities at your own time in 24 hours.
         No pressure. If you successfully complete all checkboxes on time, it will be recorded to your score below.
         At the end of the day, it is just a score. Do not worry. This is just to motivate you &#x1F64F;</string>
+    <string name="instructions">There is two modes in this game, casual and score. When score mode is selected, you will be graded according
+    to your answers and the time you take to complete it. If you select casual mode, no score and no time will be counted.</string>
 </resources>
