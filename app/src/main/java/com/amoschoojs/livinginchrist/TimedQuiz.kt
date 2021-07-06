@@ -3,8 +3,8 @@ package com.amoschoojs.livinginchrist
 import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.content.res.ColorStateList
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.DecelerateInterpolator
@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
 
@@ -27,7 +28,9 @@ class TimedQuiz : AppCompatActivity(),QuizHandler {
     private lateinit var choice4: Button
     private lateinit var dataReference: DatabaseReference
     private lateinit var nextButton: Button
+    private lateinit var scoreView: TextView
     private var count=0
+    private var correct=false
     private var answered=false
     private var timeExceeded=false
     private lateinit var animation: ObjectAnimator
@@ -49,6 +52,7 @@ class TimedQuiz : AppCompatActivity(),QuizHandler {
         choice3=findViewById(R.id.choice3timed)
         choice4=findViewById(R.id.choice4timed)
         nextButton=findViewById(R.id.nextq)
+        scoreView=findViewById(R.id.scorequiz)
         backgroundTintList= choice1.backgroundTintList!!
 
         checkDatabase()
@@ -78,6 +82,7 @@ class TimedQuiz : AppCompatActivity(),QuizHandler {
                 disableButtonAfterAnswering()
                 timeExceeded=true
             }
+                calcScore()
             }
 
             override fun onAnimationCancel(p0: Animator?) {
@@ -124,6 +129,7 @@ class TimedQuiz : AppCompatActivity(),QuizHandler {
                 quizDisplay()
                 count+=1
                 handleAnswer()
+
 
                 nextButton.setOnClickListener {
                     if (answered || timeExceeded) {
@@ -178,7 +184,8 @@ class TimedQuiz : AppCompatActivity(),QuizHandler {
         }
         else{
             finish()
-            Toast.makeText(this,"Finished quiz. Thank you for playing",Toast.LENGTH_SHORT).show()
+            Toast.makeText(this,"Finished quiz. Thank you for playing. Your score is : "+ scoreView.text.toString().filter { it.isDigit()}
+                ,Toast.LENGTH_SHORT).show()
         }
 
         answered=false
@@ -200,6 +207,7 @@ class TimedQuiz : AppCompatActivity(),QuizHandler {
             if (answerId==choice1.id){
                 choice1.startAnimation(shake)
                 choice1.backgroundTintList=this.resources.getColorStateList(R.color.green,this.theme)
+                correct=true
 
             }
             else{
@@ -220,6 +228,7 @@ class TimedQuiz : AppCompatActivity(),QuizHandler {
             if (answerId==choice2.id){
                 choice2.startAnimation(shake)
                 choice2.backgroundTintList=this.resources.getColorStateList(R.color.green,this.theme)
+                correct=true
 
             }
             else{
@@ -239,6 +248,7 @@ class TimedQuiz : AppCompatActivity(),QuizHandler {
             if (answerId==choice3.id){
                 choice3.startAnimation(shake)
                 choice3.backgroundTintList=this.resources.getColorStateList(R.color.green,this.theme)
+                correct=true
             }
             else{
                 if (answerId != null) {
@@ -252,12 +262,12 @@ class TimedQuiz : AppCompatActivity(),QuizHandler {
             disableButtonAfterAnswering()
             animation.cancel()
 
-
         }
         choice4.setOnClickListener {
             if (answerId==choice4.id){
                 choice4.startAnimation(shake)
                 choice4.backgroundTintList=this.resources.getColorStateList(R.color.green,this.theme)
+                correct=true
 
             }
             else{
@@ -274,9 +284,10 @@ class TimedQuiz : AppCompatActivity(),QuizHandler {
 
         }
 
+
     }
 
-    override fun resetButtonState() {
+    override fun resetState() {
         choice1.backgroundTintList=backgroundTintList
         choice2.backgroundTintList=backgroundTintList
         choice3.backgroundTintList=backgroundTintList
@@ -285,6 +296,8 @@ class TimedQuiz : AppCompatActivity(),QuizHandler {
         choice2.isEnabled=true
         choice3.isEnabled=true
         choice4.isEnabled=true
+        correct=false
+
     }
 
     override fun disableButtonAfterAnswering() {
@@ -297,7 +310,7 @@ class TimedQuiz : AppCompatActivity(),QuizHandler {
     override fun nextQuestion() {
         quizDisplay()
         count += 1
-        resetButtonState()
+        resetState()
         handleAnswer()
     }
 
@@ -306,6 +319,15 @@ class TimedQuiz : AppCompatActivity(),QuizHandler {
         super.onBackPressed()
         animation.removeAllListeners()
         finish()
+    }
+
+    private fun calcScore(){
+        if (correct){
+            var score=scoreView.text.toString().filter { it.isDigit() }.toInt()
+            score += (100 - (1 * progressBar.progress))
+            scoreView.text="Score: "+score.toString()
+
+        }
     }
 
 }

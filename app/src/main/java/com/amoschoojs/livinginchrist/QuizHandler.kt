@@ -22,7 +22,7 @@ interface QuizHandler {
     fun setButtonVal(index:Int,choice:String,list:List<Int>)
     fun quizDisplay()
     fun handleAnswer()
-    fun resetButtonState()
+    fun resetState()
     fun disableButtonAfterAnswering()
     fun nextQuestion()
 

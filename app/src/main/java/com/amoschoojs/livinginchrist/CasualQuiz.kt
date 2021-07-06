@@ -248,7 +248,7 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
 
     }
 
-    override fun resetButtonState(){
+    override fun resetState(){
         choice1.backgroundTintList=backgroundTintList
         choice2.backgroundTintList=backgroundTintList
         choice3.backgroundTintList=backgroundTintList
@@ -269,7 +269,7 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
     override fun nextQuestion(){
         quizDisplay()
         count += 1
-        resetButtonState()
+        resetState()
         handleAnswer()
     }
 
