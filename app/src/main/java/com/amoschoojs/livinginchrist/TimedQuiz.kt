@@ -1,44 +1,53 @@
 package com.amoschoojs.livinginchrist
 
+import android.animation.Animator
+import android.animation.ObjectAnimator
 import android.content.res.ColorStateList
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.view.animation.DecelerateInterpolator
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
 
+class TimedQuiz : AppCompatActivity(),QuizHandler {
 
-class CasualQuiz : AppCompatActivity(),QuizHandler {
-    private lateinit var database:FirebaseDatabase
+    private lateinit var database: FirebaseDatabase
     private val arrayList=ArrayList<Quiz>()
-    private lateinit var questionQuiz:TextView
+    private lateinit var questionQuiz: TextView
     private lateinit var answer:String
-    private lateinit var choice1:Button
-    private lateinit var choice2:Button
-    private lateinit var choice3:Button
-    private lateinit var choice4:Button
-    private lateinit var dataReference:DatabaseReference
+    private lateinit var choice1: Button
+    private lateinit var choice2: Button
+    private lateinit var choice3: Button
+    private lateinit var choice4: Button
+    private lateinit var dataReference: DatabaseReference
     private lateinit var nextButton: Button
     private var count=0
     private var answered=false
+    private var timeExceeded=false
+    private lateinit var animation: ObjectAnimator
     private lateinit var backgroundTintList: ColorStateList
 
+
+    private lateinit var progressBar: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_casual_quiz)
+        setContentView(R.layout.activity_timed_quiz)
+        progressBar = findViewById(R.id.progressBar)
         database= FirebaseDatabase.getInstance("https://living-in-christ-default-rtdb.asia-southeast1.firebasedatabase.app")
         dataReference=database.reference.child("quizzes")
 
 
-        questionQuiz=findViewById(R.id.questionquiz)
-        choice1=findViewById(R.id.choice1)
-        choice2=findViewById(R.id.choice2)
-        choice3=findViewById(R.id.choice3)
-        choice4=findViewById(R.id.choice4)
+        questionQuiz=findViewById(R.id.questiontimedquiz)
+        choice1=findViewById(R.id.choice1timed)
+        choice2=findViewById(R.id.choice2timed)
+        choice3=findViewById(R.id.choice3timed)
+        choice4=findViewById(R.id.choice4timed)
         nextButton=findViewById(R.id.nextq)
         backgroundTintList= choice1.backgroundTintList!!
 
@@ -47,12 +56,43 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
 
 
 
+    }
 
 
-        }
 
 
-    override fun mReadDataOnce(listener:OnGetDataListener) {
+
+
+
+    private fun countTime() {
+        animation = ObjectAnimator.ofInt(progressBar, "progress", 0, 100);
+        animation.duration = 30000;
+        animation.interpolator = DecelerateInterpolator();
+        animation.addListener(object: Animator.AnimatorListener {
+            override fun onAnimationStart(p0: Animator?) {
+            }
+
+            override fun onAnimationEnd(p0: Animator?) {
+                if(!answered){
+                Toast.makeText(applicationContext,"Time has exceeded sorry!",Toast.LENGTH_SHORT).show()
+                disableButtonAfterAnswering()
+                timeExceeded=true
+            }
+            }
+
+            override fun onAnimationCancel(p0: Animator?) {
+            }
+
+            override fun onAnimationRepeat(p0: Animator?) {
+            }
+
+        })
+        animation.start()
+
+
+    }
+
+    override fun mReadDataOnce(listener: OnGetDataListener) {
         listener.onStart();
         dataReference.addListenerForSingleValueEvent (
             object:ValueEventListener{
@@ -68,8 +108,6 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
         )
     }
 
-
-
     override fun checkDatabase() {
         mReadDataOnce(object : OnGetDataListener {
             override fun onStart() {
@@ -81,24 +119,24 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
                     for (d in data.children!!) {
                         d.getValue(Quiz::class.java)?.let { arrayList.add(it) }
                     }
-                    }
+                }
                 arrayList.shuffle()
                 quizDisplay()
                 count+=1
                 handleAnswer()
 
                 nextButton.setOnClickListener {
-                    if (answered) {
-                       nextQuestion()
+                    if (answered || timeExceeded) {
+                        nextQuestion()
                     }
                     else{
-                        MaterialAlertDialogBuilder(this@CasualQuiz).setMessage("Do you want to skip? " +
+                        MaterialAlertDialogBuilder(this@TimedQuiz).setMessage("Do you want to skip? " +
                                 "You have not answered the question.").setTitle("Confirmation").setPositiveButton("Yes"){
                                 _,_-> nextQuestion() }.setNegativeButton("No",null).show()
                     }
                 }
 
-                }
+            }
 
             override fun onFailed(databaseError: DatabaseError?) {
                 //DO SOME THING WHEN GET DATA FAILED HERE
@@ -106,20 +144,7 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
         })
     }
 
-    override fun randomSetter(): List<Int> {
-        var set= setOf(1,2,3,4)
-        val first=set.random()
-        set=set.minus(first)
-        val second=set.random()
-        set=set.minus(second)
-        val third=set.random()
-        set=set.minus(third)
-        val fourth=set.iterator().next()
-        return listOf(first,second,third,fourth)
-
-    }
-
-    override fun setButtonVal(index:Int, choice:String, list:List<Int>){
+    override fun setButtonVal(index: Int, choice: String, list: List<Int>) {
         when(list[index]) {
             1 -> {
                 choice1.text=choice
@@ -134,10 +159,9 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
                 choice4.text=choice
             }
         }
-
     }
 
-    override fun quizDisplay(){
+    override fun quizDisplay() {
         if (count<arrayList.size){
             val quiz=arrayList[count]
             answer=quiz.answer
@@ -147,20 +171,21 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
             setButtonVal(1,quiz.choice2,list)
             setButtonVal(2,quiz.choice3,list)
             setButtonVal(3,quiz.choice4,list)
+            countTime()
 
 
 
         }
         else{
-            Toast.makeText(this,"Finished quiz. Thank you for playing",Toast.LENGTH_SHORT).show()
             finish()
+            Toast.makeText(this,"Finished quiz. Thank you for playing",Toast.LENGTH_SHORT).show()
         }
 
         answered=false
-
+        timeExceeded=false
     }
 
-    override fun handleAnswer(){
+    override fun handleAnswer() {
         var answerId: Int? =null
         val shake: Animation = AnimationUtils.loadAnimation(this, R.anim.shake)
 
@@ -188,7 +213,8 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
             }
             answered=true
             disableButtonAfterAnswering()
-        }
+            animation.cancel()
+                    }
 
         choice2.setOnClickListener {
             if (answerId==choice2.id){
@@ -206,6 +232,7 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
             }
             answered=true
             disableButtonAfterAnswering()
+            animation.cancel()
 
         }
         choice3.setOnClickListener {
@@ -223,6 +250,8 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
             }
             answered=true
             disableButtonAfterAnswering()
+            animation.cancel()
+
 
         }
         choice4.setOnClickListener {
@@ -241,14 +270,13 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
             }
             answered=true
             disableButtonAfterAnswering()
+            animation.cancel()
 
         }
 
-
-
     }
 
-    override fun resetButtonState(){
+    override fun resetButtonState() {
         choice1.backgroundTintList=backgroundTintList
         choice2.backgroundTintList=backgroundTintList
         choice3.backgroundTintList=backgroundTintList
@@ -259,19 +287,25 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
         choice4.isEnabled=true
     }
 
-    override fun disableButtonAfterAnswering(){
+    override fun disableButtonAfterAnswering() {
         choice1.isEnabled=false
         choice2.isEnabled=false
         choice3.isEnabled=false
         choice4.isEnabled=false
     }
 
-    override fun nextQuestion(){
+    override fun nextQuestion() {
         quizDisplay()
         count += 1
         resetButtonState()
         handleAnswer()
     }
 
+    override fun onBackPressed() {
 
+        super.onBackPressed()
+        animation.removeAllListeners()
+        finish()
     }
+
+}

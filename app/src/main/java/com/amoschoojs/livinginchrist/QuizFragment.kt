@@ -55,6 +55,8 @@ class QuizFragment : Fragment() {
     }
 
         casualMode.setOnClickListener { val i= Intent(activity,CasualQuiz::class.java); startActivity(i) }
+        scoreMode.setOnClickListener { val i= Intent(activity,TimedQuiz::class.java); startActivity(i) }
+
     }
 
     companion object {
