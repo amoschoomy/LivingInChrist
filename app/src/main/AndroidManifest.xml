@@ -9,12 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
-        <activity android:name=".TimedQuiz"></activity>
+        <activity android:name=".CasualQuiz" />
         <activity android:name=".SpecificBook" />
         <activity android:name=".BookStudy" />
         <activity android:name=".ThemeStudy" />
         <activity android:name=".MainActivity">
-            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

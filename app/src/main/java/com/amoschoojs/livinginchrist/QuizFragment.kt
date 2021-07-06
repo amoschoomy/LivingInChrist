@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.appcompat.app.AlertDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 // TODO: Rename parameter arguments, choose names that match
@@ -55,7 +54,7 @@ class QuizFragment : Fragment() {
             }
     }
 
-        casualMode.setOnClickListener { val i= Intent(activity,TimedQuiz::class.java); startActivity(i) }
+        casualMode.setOnClickListener { val i= Intent(activity,CasualQuiz::class.java); startActivity(i) }
     }
 
     companion object {
