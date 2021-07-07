@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 // TODO: Rename parameter arguments, choose names that match
@@ -46,6 +47,7 @@ class QuizFragment : Fragment() {
         val howToPlayButton = view.findViewById<Button>(R.id.how)
         val scoreMode = view.findViewById<Button>(R.id.score)
         val casualMode = view.findViewById<Button>(R.id.casual)
+        val highScore=view.findViewById<Button>(R.id.highscore)
 
         howToPlayButton.setOnClickListener {
             activity?.let { it1 ->
@@ -56,7 +58,13 @@ class QuizFragment : Fragment() {
 
         casualMode.setOnClickListener { val i= Intent(activity,CasualQuiz::class.java); startActivity(i) }
         scoreMode.setOnClickListener { val i= Intent(activity,TimedQuiz::class.java); startActivity(i) }
+        highScore.setOnClickListener {
+            val sharedPreferences=activity?.getSharedPreferences("abc",0)
+            val highScore=sharedPreferences?.getInt("highscore",0)
+            Toast.makeText(activity, "High Score: $highScore",Toast.LENGTH_LONG).show()
 
+
+        }
     }
 
     companion object {

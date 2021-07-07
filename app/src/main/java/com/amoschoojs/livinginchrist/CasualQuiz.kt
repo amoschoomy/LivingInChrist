@@ -188,6 +188,7 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
             }
             answered=true
             disableButtonAfterAnswering()
+            vibrateAns(this)
         }
 
         choice2.setOnClickListener {
@@ -206,6 +207,7 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
             }
             answered=true
             disableButtonAfterAnswering()
+            vibrateAns(this)
 
         }
         choice3.setOnClickListener {
@@ -223,6 +225,7 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
             }
             answered=true
             disableButtonAfterAnswering()
+            vibrateAns(this)
 
         }
         choice4.setOnClickListener {
@@ -241,6 +244,7 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
             }
             answered=true
             disableButtonAfterAnswering()
+            vibrateAns(this)
 
         }
 

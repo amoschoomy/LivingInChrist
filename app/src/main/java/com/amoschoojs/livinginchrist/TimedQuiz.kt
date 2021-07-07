@@ -184,8 +184,16 @@ class TimedQuiz : AppCompatActivity(),QuizHandler {
         }
         else{
             finish()
-            Toast.makeText(this,"Finished quiz. Thank you for playing. Your score is : "+ scoreView.text.toString().filter { it.isDigit()}
+            val scoreRound=scoreView.text.toString().filter { it.isDigit()}
+            Toast.makeText(this, "Finished quiz. Thank you for playing. Your score is : $scoreRound"
                 ,Toast.LENGTH_SHORT).show()
+            val sharedPreferences=getSharedPreferences("abc",0)
+            val prevHighScore=sharedPreferences.getInt("highscore",0)
+
+            if (scoreRound.toInt()>prevHighScore){
+                sharedPreferences.edit().putInt("highscore",scoreRound.toInt()).apply()
+            }
+
         }
 
         answered=false
@@ -222,6 +230,7 @@ class TimedQuiz : AppCompatActivity(),QuizHandler {
             answered=true
             disableButtonAfterAnswering()
             animation.cancel()
+            vibrateAns(this)
                     }
 
         choice2.setOnClickListener {
@@ -242,6 +251,7 @@ class TimedQuiz : AppCompatActivity(),QuizHandler {
             answered=true
             disableButtonAfterAnswering()
             animation.cancel()
+            vibrateAns(this)
 
         }
         choice3.setOnClickListener {
@@ -261,6 +271,7 @@ class TimedQuiz : AppCompatActivity(),QuizHandler {
             answered=true
             disableButtonAfterAnswering()
             animation.cancel()
+            vibrateAns(this)
 
         }
         choice4.setOnClickListener {
@@ -281,6 +292,7 @@ class TimedQuiz : AppCompatActivity(),QuizHandler {
             answered=true
             disableButtonAfterAnswering()
             animation.cancel()
+            vibrateAns(this)
 
         }
 
