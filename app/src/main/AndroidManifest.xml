@@ -3,6 +3,7 @@
     package="com.amoschoojs.livinginchrist">
 
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="aandroid.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
