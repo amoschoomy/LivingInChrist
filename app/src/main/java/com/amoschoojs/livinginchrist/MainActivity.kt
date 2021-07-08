@@ -4,31 +4,38 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
+import android.text.Html
+import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.Menu
-import android.view.MenuItem
-import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.SwitchCompat
 import androidx.cardview.widget.CardView
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.text.HtmlCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
+import com.amoschoojs.livinginchrist.networkstream.NetworkRequestVerse
+import com.amoschoojs.livinginchrist.networkstream.OnConnectionStatusChanged
+import com.amoschoojs.livinginchrist.networkstream.VerseOfTheDay
 import com.google.android.material.navigation.NavigationView
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mainDrawer : DrawerLayout
-    val CHANNEL_ID="Reminder"
+    private val CHANNEL_ID="Reminder"
     private  var toggleStatus: Boolean = false
+    private lateinit var votdTextView:TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.nav_drawer)
@@ -65,10 +72,56 @@ class MainActivity : AppCompatActivity() {
             notify(1, builder.build())
         }
 
+        votdTextView=findViewById(R.id.bibleverse)
 
+        val networkRequestVerse=NetworkRequestVerse.checkNetworkInfo(this,object : OnConnectionStatusChanged {
+            override fun onChange(type: Boolean) {
+                if(type){
+                    MainScope().launch{
+                        withContext(Dispatchers.IO){
+                            val votd=NetworkRequestVerse.httpGet()
+                            withContext(Dispatchers.Main){
+                                votdViewHandler(votd)
+
+                            }
+                        }
+                    }
+                }
+
+                else{
+                    val votdFromSP=sharedPreferences.getString("votd","")
+                    val html=Html.fromHtml(votdFromSP,HtmlCompat.FROM_HTML_MODE_COMPACT)
+                    votdTextView.movementMethod = LinkMovementMethod.getInstance()
+                    votdTextView.text=html
+
+
+                }
+
+            }
+
+        })
 
 
     }
+
+    private fun votdViewHandler(verseOfTheDay:VerseOfTheDay){
+        val verse=verseOfTheDay.votd
+        if (verse==null){
+            Log.e("test","How can be null?")
+        }
+        val content=verse.content
+        val displayRef=verse.displayRef
+        val permalink=verse.permalink
+        val verseText= "<a href=\"$permalink\">\n$content\n <br>$displayRef </a>"
+
+        val html=Html.fromHtml(verseText,HtmlCompat.FROM_HTML_MODE_COMPACT)
+        votdTextView.text=html
+        votdTextView.movementMethod = LinkMovementMethod.getInstance()
+        getSharedPreferences("abc",0).edit().putString("votd",verseText).apply()
+
+
+    }
+
     private fun createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library

@@ -4,13 +4,22 @@ import com.google.gson.annotations.SerializedName
 
 class Verse
     (
-    private val text: String,
-    private val content: String,
+    @SerializedName("text")
+    val text: String,
+
+    @SerializedName("content")
+    val content: String,
 
     @SerializedName("display_ref")
-    private val displayRef: String,
+    val displayRef: String,
+
+    @SerializedName("reference")
     val reference: String,
+
+    @SerializedName("permalink")
     val permalink: String,
+
+    @SerializedName("copyright")
     val copyright: String,
 
     @SerializedName("copyrightlink")
@@ -18,14 +27,26 @@ class Verse
 
     @SerializedName("audiolink")
     val audioLink: String,
+    @SerializedName("day")
     val day: String,
+
+    @SerializedName("month")
     val month: String,
+
+    @SerializedName("year")
     val year: String,
 
     @SerializedName("version")
     val versionBible: String,
 
-    @SerializedName("versionid")
+    @SerializedName("version_id")
     val versionID: String,
+
+    @SerializedName("merchandising")
     val merchandising: String
 )
+{
+     override fun toString(): String {
+        return content
+    }
+    }

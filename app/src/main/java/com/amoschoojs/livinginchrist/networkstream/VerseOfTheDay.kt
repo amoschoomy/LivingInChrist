@@ -1,5 +1,5 @@
 package com.amoschoojs.livinginchrist.networkstream
 
-class VerseOfTheDay(verse:Verse) {
+class VerseOfTheDay(val votd:Verse) {
 
 }
