@@ -16,7 +16,6 @@ class CustomNavigationViewListener(private val activity: Activity) : NavigationV
             R.id.plans -> Log.e("TEST","CLICKED PLANS")
             R.id.quiz -> Log.e("TEST","Clicked quiz")
             R.id.study -> Log.e("TEST","Clicked stduy")
-            R.id.settings -> Log.e("TEST","Clicked settings")
 
         }
         val drawer:DrawerLayout =activity.findViewById<DrawerLayout>(R.id.maindrawer)

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <androidx.preference.CheckBoxPreference
+        android:defaultValue="true"
+        android:key="votdpreference"
+        android:summaryOff="Service is switched off"
+        android:summaryOn="Service is switched on"
+        android:title="Verse Of The Day" />
+</PreferenceScreen>

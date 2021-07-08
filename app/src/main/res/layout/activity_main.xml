@@ -26,15 +26,25 @@
 
 
             <TextView
-                android:id="@+id/bibleverse"
-                android:linksClickable="true"
+                android:id="@+id/votdtext"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="96dp"
+                android:layout_marginTop="80dp"
+                android:text="Verse Of The Day"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/bibleverse"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:linksClickable="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/votdtext" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/countercard"

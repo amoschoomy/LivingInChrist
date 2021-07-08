@@ -3,17 +3,14 @@
 
     <item
         android:id="@+id/counter"
-        android:title="Item" />
+        android:title="Counter Check" />
     <item
         android:id="@+id/plans"
-        android:title="Item" />
+        android:title="Plans" />
     <item
         android:id="@+id/quiz"
-        android:title="quiz" />
+        android:title="Quiz" />
     <item
         android:id="@+id/study"
-        android:title="study" />
-    <item
-        android:id="@+id/settings"
-        android:title="Item" />
+        android:title="Bible Study" />
 </menu>

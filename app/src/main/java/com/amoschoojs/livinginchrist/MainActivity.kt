@@ -4,6 +4,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
@@ -11,7 +12,9 @@ import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
@@ -20,6 +23,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.text.HtmlCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
+import androidx.preference.PreferenceManager
 import com.amoschoojs.livinginchrist.networkstream.NetworkRequestVerse
 import com.amoschoojs.livinginchrist.networkstream.OnConnectionStatusChanged
 import com.amoschoojs.livinginchrist.networkstream.VerseOfTheDay
@@ -42,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         val toolbar:androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
         mainDrawer=findViewById(R.id.maindrawer)
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         val toggle = ActionBarDrawerToggle(this, mainDrawer, toolbar, R.string.open_menu, R.string.close_menu)
         mainDrawer.addDrawerListener(toggle)
         toggle.syncState()
@@ -73,10 +78,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         votdTextView=findViewById(R.id.bibleverse)
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
+
+        val sharedPreferencesPreferenceManager = PreferenceManager.getDefaultSharedPreferences(this)
+        val votdPreference = sharedPreferencesPreferenceManager.getBoolean("votdpreference", true)
+
 
         val networkRequestVerse=NetworkRequestVerse.checkNetworkInfo(this,object : OnConnectionStatusChanged {
             override fun onChange(type: Boolean) {
-                if(type){
+                if(type && votdPreference){
                     MainScope().launch{
                         withContext(Dispatchers.IO){
                             val votd=NetworkRequestVerse.httpGet()
@@ -87,7 +97,9 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
-
+                else if(!votdPreference){
+                    votdTextView.text="Please activate Verse Of the Day Service in Settings"
+                }
                 else{
                     val votdFromSP=sharedPreferences.getString("votd","")
                     val html=Html.fromHtml(votdFromSP,HtmlCompat.FROM_HTML_MODE_COMPACT)
@@ -100,6 +112,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+
 
 
     }
@@ -162,6 +175,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.app_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.gplayrating -> Toast.makeText(this,"Sorry not yet implemented",Toast.LENGTH_SHORT).show()
+            R.id.settings -> {val i= Intent(this,SettingsApp::class.java)
+                startActivity(i)
+            }
+        }
         return true
     }
 
