@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         mainDrawer.addDrawerListener(toggle)
         toggle.syncState()
         val navigationView = findViewById<NavigationView>(R.id.navview)
-        navigationView.setNavigationItemSelectedListener(CustomNavigationViewListener(this))
+        navigationView.setNavigationItemSelectedListener(CustomNavigationViewListener(this,supportFragmentManager))
         cardViewListener()
 
         val sharedPreferences:SharedPreferences=getSharedPreferences("abc",0)
@@ -155,9 +155,10 @@ class MainActivity : AppCompatActivity() {
         val planCard: CardView = findViewById(R.id.plancard)
         val quizCard :CardView = findViewById(R.id.quizcard)
         val studyCard : CardView = findViewById(R.id.studycard)
+
         val fragmentManager: FragmentManager= supportFragmentManager
         counterCard.setOnClickListener{
-            fragmentManager.beginTransaction().replace(R.id.frag1,BlankFragment()).addToBackStack("counter").commit()
+            fragmentManager.beginTransaction().replace(R.id.frag1,CounterTimerFragment()).addToBackStack("counter").commit()
         }
         planCard.setOnClickListener{
             fragmentManager.beginTransaction().replace(R.id.frag1,PlanFragment()).addToBackStack("plans").commit()
