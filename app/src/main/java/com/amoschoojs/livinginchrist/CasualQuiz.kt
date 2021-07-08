@@ -31,6 +31,7 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_casual_quiz)
         database= FirebaseDatabase.getInstance("https://living-in-christ-default-rtdb.asia-southeast1.firebasedatabase.app")
+        database.setPersistenceEnabled(true)
         dataReference=database.reference.child("quizzes")
 
 

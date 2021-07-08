@@ -43,8 +43,8 @@ class TimedQuiz : AppCompatActivity(),QuizHandler {
         setContentView(R.layout.activity_timed_quiz)
         progressBar = findViewById(R.id.progressBar)
         database= FirebaseDatabase.getInstance("https://living-in-christ-default-rtdb.asia-southeast1.firebasedatabase.app")
+        database.setPersistenceEnabled(true)
         dataReference=database.reference.child("quizzes")
-
 
         questionQuiz=findViewById(R.id.questiontimedquiz)
         choice1=findViewById(R.id.choice1timed)

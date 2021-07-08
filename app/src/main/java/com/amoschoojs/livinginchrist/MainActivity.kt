@@ -28,6 +28,7 @@ import com.amoschoojs.livinginchrist.networkstream.NetworkRequestVerse
 import com.amoschoojs.livinginchrist.networkstream.OnConnectionStatusChanged
 import com.amoschoojs.livinginchrist.networkstream.VerseOfTheDay
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.database.FirebaseDatabase
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -112,6 +113,8 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+
+
 
 
 
