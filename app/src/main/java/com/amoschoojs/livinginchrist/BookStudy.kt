@@ -86,7 +86,6 @@ class BookStudy : AppCompatActivity() {
         val linearLayoutManager = LinearLayoutManager(this)
         bookrecview.layoutManager = linearLayoutManager
         bookrecview.adapter = bookRecyclerViewAdapter
-        val bookrecviewAdapter = bookrecview.adapter
         bookRecyclerViewAdapter.notifyDataSetChanged()
 
 

@@ -15,8 +15,8 @@ class BookStudyAdapter(private val qnas: ArrayList<QnAModel>) :
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // Your holder should contain and initialize a member variable
         // for any view that will be set as you render a row
-        val question = itemView.findViewById<TextView>(R.id.question)
-        val answer = itemView.findViewById<TextView>(R.id.answer)
+        val question: TextView = itemView.findViewById(R.id.question)
+        val answer: TextView = itemView.findViewById(R.id.answer)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -38,7 +38,7 @@ class BookStudyAdapter(private val qnas: ArrayList<QnAModel>) :
         shapeDrawable.fillColor =
             ContextCompat.getColorStateList(context, android.R.color.transparent)
         shapeDrawable.setStroke(4.0f, ContextCompat.getColor(context, R.color.light_blue_A200))
-        ViewCompat.setBackground(qtv, shapeDrawable);
+        ViewCompat.setBackground(qtv, shapeDrawable)
 
         val shapeDrawable2 = MaterialShapeDrawable()
         shapeDrawable2.fillColor =
@@ -49,7 +49,7 @@ class BookStudyAdapter(private val qnas: ArrayList<QnAModel>) :
                 R.color.light_yellow
             )
         )
-        ViewCompat.setBackground(atv, shapeDrawable2);
+        ViewCompat.setBackground(atv, shapeDrawable2)
 
 
 

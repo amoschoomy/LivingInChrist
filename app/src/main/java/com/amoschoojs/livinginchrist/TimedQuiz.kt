@@ -2,6 +2,7 @@ package com.amoschoojs.livinginchrist
 
 import android.animation.Animator
 import android.animation.ObjectAnimator
+import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.animation.Animation
@@ -12,6 +13,8 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.amoschoojs.livinginchrist.networkstream.NetworkRequestVerse
+import com.amoschoojs.livinginchrist.networkstream.OnConnectionStatusChanged
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
 
@@ -35,7 +38,7 @@ class TimedQuiz : AppCompatActivity(), QuizHandler {
     private lateinit var animation: ObjectAnimator
     private lateinit var backgroundTintList: ColorStateList
 
-
+    private lateinit var sharedPreferences:SharedPreferences
     private lateinit var progressBar: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,9 +46,13 @@ class TimedQuiz : AppCompatActivity(), QuizHandler {
         progressBar = findViewById(R.id.progressBar)
         database =
             FirebaseDatabase.getInstance("https://living-in-christ-default-rtdb.asia-southeast1.firebasedatabase.app")
-        database.setPersistenceEnabled(true)
+        try{
+        database.setPersistenceEnabled(true)}catch (e:Exception){
+
+        }
         dataReference = database.reference.child("quizzes")
 
+        sharedPreferences=getSharedPreferences("abc",0)
         questionQuiz = findViewById(R.id.questiontimedquiz)
         choice1 = findViewById(R.id.choice1timed)
         choice2 = findViewById(R.id.choice2timed)
@@ -55,7 +62,24 @@ class TimedQuiz : AppCompatActivity(), QuizHandler {
         scoreView = findViewById(R.id.scorequiz)
         backgroundTintList = choice1.backgroundTintList!!
 
-        checkDatabase()
+        val connectedBefore=sharedPreferences.getBoolean("connectedBefore",false)
+        NetworkRequestVerse.checkNetworkInfo(this,object: OnConnectionStatusChanged {
+            override fun onChange(type: Boolean) {
+                if(type){
+                    checkDatabase()
+                    sharedPreferences.edit().putBoolean("connectedBefore",true).apply()
+                }
+                else if(!connectedBefore){
+                    Toast.makeText(applicationContext,"Please try again when you have internet connection",Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                else if(connectedBefore){
+                    checkDatabase()
+                }
+            }
+
+        })
+
 
 
     }

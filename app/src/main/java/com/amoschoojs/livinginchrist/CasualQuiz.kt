@@ -1,13 +1,17 @@
 package com.amoschoojs.livinginchrist
 
+import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.amoschoojs.livinginchrist.networkstream.NetworkRequestVerse
+import com.amoschoojs.livinginchrist.networkstream.OnConnectionStatusChanged
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
 
@@ -23,16 +27,23 @@ class CasualQuiz : AppCompatActivity(), QuizHandler {
     private lateinit var choice4: Button
     private lateinit var dataReference: DatabaseReference
     private lateinit var nextButton: Button
+    private lateinit var sharedPreferences:SharedPreferences
     private var count = 0
     private var answered = false
     private lateinit var backgroundTintList: ColorStateList
+    private lateinit var connectedRef:DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_casual_quiz)
+        sharedPreferences=getSharedPreferences("abc",0)
         database =
             FirebaseDatabase.getInstance("https://living-in-christ-default-rtdb.asia-southeast1.firebasedatabase.app")
-        database.setPersistenceEnabled(true)
+        try{
+        database.setPersistenceEnabled(true)}
+        catch (e:Exception){
+
+        }
         dataReference = database.reference.child("quizzes")
 
 
@@ -43,8 +54,23 @@ class CasualQuiz : AppCompatActivity(), QuizHandler {
         choice4 = findViewById(R.id.choice4)
         nextButton = findViewById(R.id.nextq)
         backgroundTintList = choice1.backgroundTintList!!
+        val connectedBefore=sharedPreferences.getBoolean("connectedBefore",false)
+        NetworkRequestVerse.checkNetworkInfo(this,object:OnConnectionStatusChanged{
+            override fun onChange(type: Boolean) {
+                if(type){
+                    checkDatabase()
+                    sharedPreferences.edit().putBoolean("connectedBefore",true).apply()
+                }
+                else if(!connectedBefore){
+                    Toast.makeText(applicationContext,"Please try again when you have internet connection",Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                else if(connectedBefore){
+                    checkDatabase()
+                }
+            }
 
-        checkDatabase()
+        })
 
 
     }
@@ -60,11 +86,14 @@ class CasualQuiz : AppCompatActivity(), QuizHandler {
 
 
                 override fun onCancelled(databaseError: DatabaseError) {
-                    listener.onFailed(databaseError);
+                    listener.onFailed(databaseError)
                 }
+
+
             }
         )
     }
+
 
 
     override fun checkDatabase() {
@@ -100,7 +129,6 @@ class CasualQuiz : AppCompatActivity(), QuizHandler {
             }
 
             override fun onFailed(databaseError: DatabaseError?) {
-                //DO SOME THING WHEN GET DATA FAILED HERE
             }
         })
     }

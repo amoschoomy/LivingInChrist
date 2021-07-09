@@ -17,7 +17,7 @@ class BooksRecyclerViewAdapter(private val array: Array<String>) :
         // Your holder should contain and initialize a member variable
         // for any view that will be set as you render a row
 
-        val bookView = itemView.findViewById<TextView>(R.id.book)
+        val bookView: TextView = itemView.findViewById(R.id.book)
 
 
     }
@@ -40,7 +40,7 @@ class BooksRecyclerViewAdapter(private val array: Array<String>) :
         val shapeDrawable = MaterialShapeDrawable()
         shapeDrawable.fillColor =
             ContextCompat.getColorStateList(context, android.R.color.transparent)
-        shapeDrawable.setStroke(1.0f, ContextCompat.getColor(context, R.color.light_blue_A200));
+        shapeDrawable.setStroke(1.0f, ContextCompat.getColor(context, R.color.light_blue_A200))
         ViewCompat.setBackground(textView, shapeDrawable)
         textView.text = book
         textView.setOnClickListener {

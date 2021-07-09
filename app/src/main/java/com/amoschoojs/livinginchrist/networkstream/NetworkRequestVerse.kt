@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.ConnectivityManager.NetworkCallback
 import android.net.Network
-import android.os.Build
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import kotlinx.coroutines.Dispatchers
@@ -25,27 +24,25 @@ class NetworkRequestVerse {
         ) {
             val connectivityManager =
                 context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                val capabilities =
-                    connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-                if (capabilities == null) {
+            val capabilities =
+                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if (capabilities == null) {
+                onConnectionStatusChange.onChange(false)
+            }
+            connectivityManager.registerDefaultNetworkCallback(object : NetworkCallback() {
+                override fun onAvailable(network: Network) {
+                    onConnectionStatusChange.onChange(true)
+                }
+
+                override fun onLost(network: Network) {
                     onConnectionStatusChange.onChange(false)
                 }
-                connectivityManager.registerDefaultNetworkCallback(object : NetworkCallback() {
-                    override fun onAvailable(network: Network) {
-                        onConnectionStatusChange.onChange(true)
-                    }
 
-                    override fun onLost(network: Network) {
-                        onConnectionStatusChange.onChange(false)
-                    }
-
-                    override fun onUnavailable() {
-                        super.onUnavailable()
-                        onConnectionStatusChange.onChange(false)
-                    }
-                })
-            }
+                override fun onUnavailable() {
+                    super.onUnavailable()
+                    onConnectionStatusChange.onChange(false)
+                }
+            })
         }
 
 
@@ -56,8 +53,8 @@ class NetworkRequestVerse {
 
 
                 // create URL
-                val url: String = "http://www.biblegateway.com/votd/get/?format=json&version=NIV"
-                val urlObject: URL = URL(url)
+                val url = "http://www.biblegateway.com/votd/get/?format=json&version=NIV"
+                val urlObject = URL(url)
 
 
                 // create HttpURLConnection
