@@ -18,6 +18,23 @@
     Counter Streak is to keep an integrity check of temptations where most Christians are struggling. \n\n
     Daily Plans is a simple feature for you to keep track of your daily devotional plans. As of now the features are simple but it is  a start.\n\n
     Quiz is just a simple game to test your Biblical Knowledge \n \n
-    Bible Study feature is for you to keep track of your study progress in the Bible. It is seperated into themes and books where you can organise your study notes as you wish.
+    Bible Study feature is for you to keep track of your study progress in the Bible. It is separated into themes and books where you can organise your study notes as you wish.
     Obviously it is nothing fancy compared to others but better something than nothing.</string>
+    <string name="next">Next</string>
+    <string name="counter">Counter</string>
+    <string name="history">History</string>
+    <string name="your_streak">Your Streak</string>
+    <string name="start">Start</string>
+    <string name="reset">Reset</string>
+    <string name="quiet_time">Quiet Time</string>
+    <string name="worship">Worship</string>
+    <string name="bible_study">Bible Study</string>
+    <string name="completed_0_times">Completed 0 times</string>
+    <string name="submit">Submit</string>
+    <string name="score_mode">Score Mode</string>
+    <string name="casual_mode">Casual Mode</string>
+    <string name="how_to_play">How to Play</string>
+    <string name="high_score">High Score</string>
+    <string name="question_topic">Question/Topic:</string>
+    <string name="answer_explanation">Answer/Explanation:</string>
 </resources>
