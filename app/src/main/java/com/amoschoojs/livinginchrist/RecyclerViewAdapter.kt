@@ -10,7 +10,7 @@ class RecyclerViewAdapter(private val dataSet: ArrayList<String>) :
     RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
 
-    class ViewHolder(private val itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val streakCount: TextView = itemView.findViewById(R.id.streakhistory)
 
     }

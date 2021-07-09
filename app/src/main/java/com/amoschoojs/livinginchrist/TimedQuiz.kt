@@ -38,7 +38,7 @@ class TimedQuiz : AppCompatActivity(), QuizHandler {
     private lateinit var animation: ObjectAnimator
     private lateinit var backgroundTintList: ColorStateList
 
-    private lateinit var sharedPreferences:SharedPreferences
+    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var progressBar: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,13 +46,15 @@ class TimedQuiz : AppCompatActivity(), QuizHandler {
         progressBar = findViewById(R.id.progressBar)
         database =
             FirebaseDatabase.getInstance("https://living-in-christ-default-rtdb.asia-southeast1.firebasedatabase.app")
-        try{
-        database.setPersistenceEnabled(true)}catch (e:Exception){
+
+        try {
+            database.setPersistenceEnabled(true)
+        } catch (e: Exception) {
 
         }
         dataReference = database.reference.child("quizzes")
 
-        sharedPreferences=getSharedPreferences("abc",0)
+        sharedPreferences = getSharedPreferences("abc", 0)
         questionQuiz = findViewById(R.id.questiontimedquiz)
         choice1 = findViewById(R.id.choice1timed)
         choice2 = findViewById(R.id.choice2timed)
@@ -62,18 +64,21 @@ class TimedQuiz : AppCompatActivity(), QuizHandler {
         scoreView = findViewById(R.id.scorequiz)
         backgroundTintList = choice1.backgroundTintList!!
 
-        val connectedBefore=sharedPreferences.getBoolean("connectedBefore",false)
-        NetworkRequestVerse.checkNetworkInfo(this,object: OnConnectionStatusChanged {
+        val connectedBefore = sharedPreferences.getBoolean("connectedBefore", false)
+
+        NetworkRequestVerse.checkNetworkInfo(this, object : OnConnectionStatusChanged {
             override fun onChange(type: Boolean) {
-                if(type){
+                if (type) {
                     checkDatabase()
-                    sharedPreferences.edit().putBoolean("connectedBefore",true).apply()
-                }
-                else if(!connectedBefore){
-                    Toast.makeText(applicationContext,"Please try again when you have internet connection",Toast.LENGTH_SHORT).show()
+                    sharedPreferences.edit().putBoolean("connectedBefore", true).apply()
+                } else if (!connectedBefore) {
+                    Toast.makeText(
+                        applicationContext,
+                        "Please try again when you have internet connection",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     finish()
-                }
-                else if(connectedBefore){
+                } else if (connectedBefore) {
                     checkDatabase()
                 }
             }
@@ -81,14 +86,13 @@ class TimedQuiz : AppCompatActivity(), QuizHandler {
         })
 
 
-
     }
 
 
     private fun countTime() {
-        animation = ObjectAnimator.ofInt(progressBar, "progress", 0, 100);
-        animation.duration = 30000;
-        animation.interpolator = DecelerateInterpolator();
+        animation = ObjectAnimator.ofInt(progressBar, "progress", 0, 100)
+        animation.duration = 30000
+        animation.interpolator = DecelerateInterpolator()
         animation.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(p0: Animator?) {
             }
@@ -118,17 +122,17 @@ class TimedQuiz : AppCompatActivity(), QuizHandler {
 
     }
 
-    override fun mReadDataOnce(listener: OnGetDataListener) {
-        listener.onStart();
+    override fun mReadDataOnce(onGetDataListener: OnGetDataListener) {
+        onGetDataListener.onStart()
         dataReference.addListenerForSingleValueEvent(
             object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    listener.onSuccess(dataSnapshot);
+                    onGetDataListener.onSuccess(dataSnapshot)
                 }
 
 
                 override fun onCancelled(databaseError: DatabaseError) {
-                    listener.onFailed(databaseError);
+                    onGetDataListener.onFailed(databaseError)
                 }
             }
         )
@@ -142,7 +146,7 @@ class TimedQuiz : AppCompatActivity(), QuizHandler {
             override fun onSuccess(data: DataSnapshot?) {
                 //DO SOME THING WHEN GET DATA SUCCESS HERE
                 if (data != null) {
-                    for (d in data.children!!) {
+                    for (d in data.children) {
                         d.getValue(Quiz::class.java)?.let { arrayList.add(it) }
                     }
                 }
@@ -377,7 +381,7 @@ class TimedQuiz : AppCompatActivity(), QuizHandler {
         if (correct) {
             var score = scoreView.text.toString().filter { it.isDigit() }.toInt()
             score += (100 - (1 * progressBar.progress))
-            scoreView.text = "Score: " + score.toString()
+            scoreView.text = "Score: $score"
 
         }
     }

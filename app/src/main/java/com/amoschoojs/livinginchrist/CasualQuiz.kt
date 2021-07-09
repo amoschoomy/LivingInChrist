@@ -3,7 +3,6 @@ package com.amoschoojs.livinginchrist
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
@@ -27,21 +26,20 @@ class CasualQuiz : AppCompatActivity(), QuizHandler {
     private lateinit var choice4: Button
     private lateinit var dataReference: DatabaseReference
     private lateinit var nextButton: Button
-    private lateinit var sharedPreferences:SharedPreferences
+    private lateinit var sharedPreferences: SharedPreferences
     private var count = 0
     private var answered = false
     private lateinit var backgroundTintList: ColorStateList
-    private lateinit var connectedRef:DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_casual_quiz)
-        sharedPreferences=getSharedPreferences("abc",0)
+        sharedPreferences = getSharedPreferences("abc", 0)
         database =
             FirebaseDatabase.getInstance("https://living-in-christ-default-rtdb.asia-southeast1.firebasedatabase.app")
-        try{
-        database.setPersistenceEnabled(true)}
-        catch (e:Exception){
+        try {
+            database.setPersistenceEnabled(true)
+        } catch (e: Exception) {
 
         }
         dataReference = database.reference.child("quizzes")
@@ -54,18 +52,20 @@ class CasualQuiz : AppCompatActivity(), QuizHandler {
         choice4 = findViewById(R.id.choice4)
         nextButton = findViewById(R.id.nextq)
         backgroundTintList = choice1.backgroundTintList!!
-        val connectedBefore=sharedPreferences.getBoolean("connectedBefore",false)
-        NetworkRequestVerse.checkNetworkInfo(this,object:OnConnectionStatusChanged{
+        val connectedBefore = sharedPreferences.getBoolean("connectedBefore", false)
+        NetworkRequestVerse.checkNetworkInfo(this, object : OnConnectionStatusChanged {
             override fun onChange(type: Boolean) {
-                if(type){
+                if (type) {
                     checkDatabase()
-                    sharedPreferences.edit().putBoolean("connectedBefore",true).apply()
-                }
-                else if(!connectedBefore){
-                    Toast.makeText(applicationContext,"Please try again when you have internet connection",Toast.LENGTH_SHORT).show()
+                    sharedPreferences.edit().putBoolean("connectedBefore", true).apply()
+                } else if (!connectedBefore) {
+                    Toast.makeText(
+                        applicationContext,
+                        "Please try again when you have internet connection",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     finish()
-                }
-                else if(connectedBefore){
+                } else if (connectedBefore) {
                     checkDatabase()
                 }
             }
@@ -76,24 +76,23 @@ class CasualQuiz : AppCompatActivity(), QuizHandler {
     }
 
 
-    override fun mReadDataOnce(listener: OnGetDataListener) {
-        listener.onStart();
+    override fun mReadDataOnce(onGetDataListener: OnGetDataListener) {
+        onGetDataListener.onStart()
         dataReference.addListenerForSingleValueEvent(
             object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    listener.onSuccess(dataSnapshot);
+                    onGetDataListener.onSuccess(dataSnapshot)
                 }
 
 
                 override fun onCancelled(databaseError: DatabaseError) {
-                    listener.onFailed(databaseError)
+                    onGetDataListener.onFailed(databaseError)
                 }
 
 
             }
         )
     }
-
 
 
     override fun checkDatabase() {
@@ -104,7 +103,7 @@ class CasualQuiz : AppCompatActivity(), QuizHandler {
             override fun onSuccess(data: DataSnapshot?) {
                 //DO SOME THING WHEN GET DATA SUCCESS HERE
                 if (data != null) {
-                    for (d in data.children!!) {
+                    for (d in data.children) {
                         d.getValue(Quiz::class.java)?.let { arrayList.add(it) }
                     }
                 }

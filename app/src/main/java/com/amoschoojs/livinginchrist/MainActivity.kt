@@ -10,7 +10,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
@@ -76,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
 
         createNotificationChannel()
-        var builder = NotificationCompat.Builder(this, CHANNEL_ID)
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle("Reminder")
             .setContentText("Keep your faith and resist temptation")
@@ -96,42 +95,38 @@ class MainActivity : AppCompatActivity() {
         val votdPreference = sharedPreferencesPreferenceManager.getBoolean("votdpreference", true)
 
 
-        val networkRequestVerse =
-            NetworkRequestVerse.checkNetworkInfo(this, object : OnConnectionStatusChanged {
-                override fun onChange(type: Boolean) {
-                    if (type && votdPreference) {
-                        MainScope().launch {
-                            withContext(Dispatchers.IO) {
-                                val votd = NetworkRequestVerse.httpGet()
-                                withContext(Dispatchers.Main) {
-                                    votdViewHandler(votd)
+        NetworkRequestVerse.checkNetworkInfo(this, object : OnConnectionStatusChanged {
+            override fun onChange(type: Boolean) {
+                if (type && votdPreference) {
+                    MainScope().launch {
+                        withContext(Dispatchers.IO) {
+                            val votd = NetworkRequestVerse.httpGet()
+                            withContext(Dispatchers.Main) {
+                                votdViewHandler(votd)
 
-                                }
                             }
                         }
-                    } else if (!votdPreference) {
-                        votdTextView.text = "Please activate Verse Of the Day Service in Settings"
-                    } else {
-                        val votdFromSP = sharedPreferences.getString("votd", "")
-                        val html = Html.fromHtml(votdFromSP, HtmlCompat.FROM_HTML_MODE_COMPACT)
-                        votdTextView.movementMethod = LinkMovementMethod.getInstance()
-                        votdTextView.text = html
-
-
                     }
+                } else if (!votdPreference) {
+                    votdTextView.text = "Please activate Verse Of the Day Service in Settings"
+                } else {
+                    val votdFromSP = sharedPreferences.getString("votd", "Please connect to the Internet")
+                    val html = Html.fromHtml(votdFromSP, HtmlCompat.FROM_HTML_MODE_COMPACT)
+                    votdTextView.movementMethod = LinkMovementMethod.getInstance()
+                    votdTextView.text = html
+
 
                 }
 
-            })
+            }
+
+        })
 
 
     }
 
     private fun votdViewHandler(verseOfTheDay: VerseOfTheDay) {
         val verse = verseOfTheDay.votd
-        if (verse == null) {
-            Log.e("test", "How can be null?")
-        }
         val content = verse.content
         val displayRef = verse.displayRef
         val permalink = verse.permalink
@@ -148,20 +143,17 @@ class MainActivity : AppCompatActivity() {
     private fun createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                "Reminder",
-                NotificationManager.IMPORTANCE_HIGH
-            ).apply {
-                description = "Daily Reminder"
-            }
-            // Register the channel with the system
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
+        val channel = NotificationChannel(
+            CHANNEL_ID,
+            "Reminder",
+            NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            description = "Daily Reminder"
         }
+        // Register the channel with the system
+        val notificationManager: NotificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 
     private fun cardViewListener() {

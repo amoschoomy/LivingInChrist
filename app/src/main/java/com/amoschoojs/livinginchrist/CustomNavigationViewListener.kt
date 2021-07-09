@@ -25,7 +25,7 @@ class CustomNavigationViewListener(
                 .replace(R.id.frag1, BibleStudyFragment()).addToBackStack("counter").commit()
 
         }
-        val drawer: DrawerLayout = activity.findViewById<DrawerLayout>(R.id.maindrawer)
+        val drawer: DrawerLayout = activity.findViewById(R.id.maindrawer)
         drawer.closeDrawer(GravityCompat.START)
         return true
     }

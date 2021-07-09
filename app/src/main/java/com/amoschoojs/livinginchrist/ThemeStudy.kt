@@ -3,7 +3,6 @@ package com.amoschoojs.livinginchrist
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
@@ -45,7 +44,6 @@ class AlertDialogStudy {
                     ).show()
                 } else {
                     arrayList.add(titleBox.text.toString())
-                    Log.e("TEST", titleBox.text.toString())
                     sharedPreferencesEditor.putString(
                         titleBox.text.toString(),
                         contentBox.text.toString()
@@ -105,7 +103,6 @@ class ThemeStudy : AppCompatActivity() {
         peaceAdapter = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, arrayPeace)
         peaceSpinner.adapter = peaceAdapter
 
-        Log.e("TEST", "Set up peace adapter")
         peaceSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
 

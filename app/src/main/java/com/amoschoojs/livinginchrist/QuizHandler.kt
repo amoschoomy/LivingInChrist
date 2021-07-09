@@ -2,7 +2,6 @@ package com.amoschoojs.livinginchrist
 
 import android.content.Context
 import android.content.Context.VIBRATOR_SERVICE
-import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 
@@ -31,16 +30,12 @@ interface QuizHandler {
     fun disableButtonAfterAnswering()
     fun nextQuestion()
     fun vibrateAns(context: Context) {
-        if (Build.VERSION.SDK_INT >= 26) {
-            (context.getSystemService(VIBRATOR_SERVICE) as Vibrator).vibrate(
-                VibrationEffect.createOneShot(
-                    200,
-                    VibrationEffect.DEFAULT_AMPLITUDE
-                )
+        (context.getSystemService(VIBRATOR_SERVICE) as Vibrator).vibrate(
+            VibrationEffect.createOneShot(
+                200,
+                VibrationEffect.DEFAULT_AMPLITUDE
             )
-        } else {
-            (context.getSystemService(VIBRATOR_SERVICE) as Vibrator).vibrate(150)
-        }
+        )
     }
 
 
