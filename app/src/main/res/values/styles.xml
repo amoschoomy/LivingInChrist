@@ -3,7 +3,6 @@
     <style name="Widget.Theme.AppCompat.DayNight.NoActionBar.ButtonBar.Fullscreen" parent="">
         <item name="android:background">@color/black_overlay</item>
         <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
 
     </style>
 

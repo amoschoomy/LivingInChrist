@@ -23,11 +23,13 @@
 
             <TextView
                 android:id="@+id/peaceview"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/judson"
                 android:text="Peace"
-                app:layout_constraintBaseline_toBaselineOf="@+id/peacespinner"
+                android:textColor="@color/black_overlay"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -37,6 +39,8 @@
                 android:layout_height="41dp"
                 android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.957"
+                app:layout_constraintStart_toEndOf="@+id/peaceview"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -44,7 +48,9 @@
                 android:layout_width="0dp"
                 android:layout_height="139dp"
                 android:layout_marginTop="24dp"
-                android:text="Peace Placeholder"
+                android:fontFamily="@font/judson"
+                android:textColor="@color/black_overlay"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +62,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="40dp"
+                android:fontFamily="@font/judson"
                 android:text="Love"
+                android:textColor="@color/black_overlay"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/peacenote" />
 
@@ -75,7 +84,9 @@
                 android:layout_width="0dp"
                 android:layout_height="139dp"
                 android:layout_marginTop="24dp"
-                android:text="Love Placeholder"
+                android:fontFamily="@font/judson"
+                android:textColor="@color/black_overlay"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -94,7 +105,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
+                android:fontFamily="@font/judson"
                 android:text="Faithfulness"
+                android:textColor="@color/black_overlay"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/lovenote" />
 
@@ -103,7 +117,9 @@
                 android:layout_width="0dp"
                 android:layout_height="139dp"
                 android:layout_marginTop="24dp"
-                android:text="Faith"
+                android:fontFamily="@font/judson"
+                android:textColor="@color/black_overlay"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/faithfulnessspinner" />
@@ -121,7 +137,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
+                android:fontFamily="@font/judson"
                 android:text="Kindness"
+                android:textColor="@color/black_overlay"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/faithnote" />
 
@@ -130,7 +149,9 @@
                 android:layout_width="0dp"
                 android:layout_height="139dp"
                 android:layout_marginTop="24dp"
-                android:text="Kindness"
+                android:fontFamily="@font/judson"
+                android:textColor="@color/black_overlay"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -186,7 +207,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
+                android:fontFamily="@font/judson"
                 android:text="Self Control"
+                android:textColor="@color/black_overlay"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/kindnessnote" />
 
@@ -195,7 +219,9 @@
                 android:layout_width="0dp"
                 android:layout_height="139dp"
                 android:layout_marginTop="24dp"
-                android:text="Self Control"
+                android:fontFamily="@font/judson"
+                android:textColor="@color/black_overlay"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"

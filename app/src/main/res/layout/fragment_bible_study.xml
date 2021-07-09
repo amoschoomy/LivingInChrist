@@ -25,7 +25,10 @@
                 android:id="@+id/textView14"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Study by Themes" />
+                android:fontFamily="@font/judson"
+                android:gravity="center"
+                android:text="Study by Themes"
+                android:textSize="30sp" />
 
         </androidx.cardview.widget.CardView>
 
@@ -50,7 +53,10 @@
                 android:id="@+id/textView15"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Study by Books" />
+                android:fontFamily="@font/judson"
+                android:gravity="center"
+                android:text="Study by Books"
+                android:textSize="30sp" />
 
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
