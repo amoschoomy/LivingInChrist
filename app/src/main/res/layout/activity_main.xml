@@ -108,8 +108,8 @@
                         android:layout_height="0dp"
                         android:fontFamily="@font/judson"
                         android:gravity="center"
-                        android:textSize="24sp"
                         android:text="Daily Plan Check In"
+                        android:textSize="24sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -131,12 +131,12 @@
 
                 <TextView
                     android:id="@+id/textView"
-                    android:fontFamily="@font/judson"
-                    android:gravity="center"
-                    android:textSize="24sp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Quizzes" />
+                    android:fontFamily="@font/judson"
+                    android:gravity="center"
+                    android:text="Quizzes"
+                    android:textSize="24sp" />
 
             </androidx.cardview.widget.CardView>
 
@@ -154,12 +154,12 @@
 
                 <TextView
                     android:id="@+id/textView3"
-                    android:fontFamily="@font/judson"
-                    android:gravity="center"
-                    android:textSize="24sp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Bible Study" />
+                    android:fontFamily="@font/judson"
+                    android:gravity="center"
+                    android:text="Bible Study"
+                    android:textSize="24sp" />
             </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

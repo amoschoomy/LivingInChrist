@@ -26,30 +26,31 @@ private const val ARG_PARAM2 = "param2"
 class CounterFragment : Fragment() {
     // TODO: Rename and change types of
     private lateinit var param1: ArrayList<String>
-    private var countStarted:Boolean=false
+    private var countStarted: Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (!activity?.getSharedPreferences("abc",0)?.contains("history")!!){
+        if (!activity?.getSharedPreferences("abc", 0)?.contains("history")!!) {
             val gson = Gson()
-            val arrayString=gson.toJson(ArrayList<Int>())
-            val arrayType: Type =object: TypeToken<ArrayList<String?>?>(){}.type
-            activity?.getSharedPreferences("abc",0)?.edit()?.putString("history",arrayString)?.apply()
-            param1=gson.fromJson<ArrayList<String>>(
-                activity?.getSharedPreferences("abc",0)!!.getString("history","[]"),arrayType)
-        }
-        else{
-           val array= activity?.getSharedPreferences("abc",0)?.getString("history","[]")
-            val arrayType: Type =object: TypeToken<ArrayList<String?>?>(){}.type
-            val gson=Gson()
-            param1=gson.fromJson(array,arrayType)
+            val arrayString = gson.toJson(ArrayList<Int>())
+            val arrayType: Type = object : TypeToken<ArrayList<String?>?>() {}.type
+            activity?.getSharedPreferences("abc", 0)?.edit()?.putString("history", arrayString)
+                ?.apply()
+            param1 = gson.fromJson<ArrayList<String>>(
+                activity?.getSharedPreferences("abc", 0)!!.getString("history", "[]"), arrayType
+            )
+        } else {
+            val array = activity?.getSharedPreferences("abc", 0)?.getString("history", "[]")
+            val arrayType: Type = object : TypeToken<ArrayList<String?>?>() {}.type
+            val gson = Gson()
+            param1 = gson.fromJson(array, arrayType)
 
         }
 
         super.onCreate(savedInstanceState)
 
-        val sharedPreferences=requireActivity().getSharedPreferences("abc",0)
-        countStarted=sharedPreferences.getBoolean("countstatus",false)
+        val sharedPreferences = requireActivity().getSharedPreferences("abc", 0)
+        countStarted = sharedPreferences.getBoolean("countstatus", false)
     }
 
     override fun onCreateView(
@@ -67,31 +68,34 @@ class CounterFragment : Fragment() {
     }
 
 
-    private fun chronometerHandler(view: View){
-        val duration=view.findViewById<Chronometer>(R.id.duration)
-        val sharedPreferences=activity?.getSharedPreferences("abc",0)
-        val current=System.currentTimeMillis()
-        val calc=SystemClock.elapsedRealtime()-(current- sharedPreferences?.getLong("startTime",current)!!)
+    private fun chronometerHandler(view: View) {
+        val duration = view.findViewById<Chronometer>(R.id.duration)
+        val sharedPreferences = activity?.getSharedPreferences("abc", 0)
+        val current = System.currentTimeMillis()
+        val calc = SystemClock.elapsedRealtime() - (current - sharedPreferences?.getLong(
+            "startTime",
+            current
+        )!!)
 
-        val resetButton=view.findViewById<Button>(R.id.reset)
-        val startButton=view.findViewById<Button>(R.id.countstreak)
-        if(countStarted){
-            duration.base=calc
-            resetButton.isEnabled=true
-            startButton.isEnabled=false
+        val resetButton = view.findViewById<Button>(R.id.reset)
+        val startButton = view.findViewById<Button>(R.id.countstreak)
+        if (countStarted) {
+            duration.base = calc
+            resetButton.isEnabled = true
+            startButton.isEnabled = false
             duration.start()
         }
 
         startButton.setOnClickListener {
-            Log.e("TEST","clicked start button")
-            if(!countStarted){
-                duration.base=SystemClock.elapsedRealtime()
+            Log.e("TEST", "clicked start button")
+            if (!countStarted) {
+                duration.base = SystemClock.elapsedRealtime()
                 duration.start()
-                val start=System.currentTimeMillis()
-                sharedPreferences.edit()?.putLong("startTime",start)?.apply()
-                countStarted=true
-                resetButton.isEnabled=true
-                startButton.isEnabled=false
+                val start = System.currentTimeMillis()
+                sharedPreferences.edit()?.putLong("startTime", start)?.apply()
+                countStarted = true
+                resetButton.isEnabled = true
+                startButton.isEnabled = false
             }
 
         }
@@ -99,10 +103,10 @@ class CounterFragment : Fragment() {
         resetButton.setOnClickListener {
             duration.stop()
             param1.add(duration.text.toString())
-            duration.base=SystemClock.elapsedRealtime()
-            countStarted=false
-            resetButton.isEnabled=false
-            startButton.isEnabled=true
+            duration.base = SystemClock.elapsedRealtime()
+            countStarted = false
+            resetButton.isEnabled = false
+            startButton.isEnabled = true
         }
 
     }
@@ -110,26 +114,25 @@ class CounterFragment : Fragment() {
 
     override fun onPause() {
         val gson = Gson()
-        val arrayString=gson.toJson(param1)
-        val sharedPreferences=activity?.getSharedPreferences("abc",0)
-        val sharedPreferencesEditor=sharedPreferences?.edit()
-        var deleted=sharedPreferences?.getBoolean("clearedHistory",false)
-        if(!deleted!!){
-        sharedPreferencesEditor?.putString("history",arrayString)
-        sharedPreferencesEditor?.apply()
-        }
-        else{
-            param1=ArrayList()
-            sharedPreferencesEditor?.putBoolean("clearedHistory",false)?.apply()
+        val arrayString = gson.toJson(param1)
+        val sharedPreferences = activity?.getSharedPreferences("abc", 0)
+        val sharedPreferencesEditor = sharedPreferences?.edit()
+        var deleted = sharedPreferences?.getBoolean("clearedHistory", false)
+        if (!deleted!!) {
+            sharedPreferencesEditor?.putString("history", arrayString)
+            sharedPreferencesEditor?.apply()
+        } else {
+            param1 = ArrayList()
+            sharedPreferencesEditor?.putBoolean("clearedHistory", false)?.apply()
         }
         super.onPause()
     }
 
     override fun onStop() {
-        val duration=view?.findViewById<Chronometer>(R.id.duration)
-        val sharedPreferencesEditor=activity?.getSharedPreferences("abc",0)?.edit()
-        sharedPreferencesEditor?.putBoolean("countstatus",countStarted)?.apply()
-        sharedPreferencesEditor?.putString("currentTime",duration?.text.toString())?.apply()
+        val duration = view?.findViewById<Chronometer>(R.id.duration)
+        val sharedPreferencesEditor = activity?.getSharedPreferences("abc", 0)?.edit()
+        sharedPreferencesEditor?.putBoolean("countstatus", countStarted)?.apply()
+        sharedPreferencesEditor?.putString("currentTime", duration?.text.toString())?.apply()
         super.onStop()
     }
 

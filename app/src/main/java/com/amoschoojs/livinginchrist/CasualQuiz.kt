@@ -12,51 +12,48 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
 
 
-class CasualQuiz : AppCompatActivity(),QuizHandler {
-    private lateinit var database:FirebaseDatabase
-    private val arrayList=ArrayList<Quiz>()
-    private lateinit var questionQuiz:TextView
-    private lateinit var answer:String
-    private lateinit var choice1:Button
-    private lateinit var choice2:Button
-    private lateinit var choice3:Button
-    private lateinit var choice4:Button
-    private lateinit var dataReference:DatabaseReference
+class CasualQuiz : AppCompatActivity(), QuizHandler {
+    private lateinit var database: FirebaseDatabase
+    private val arrayList = ArrayList<Quiz>()
+    private lateinit var questionQuiz: TextView
+    private lateinit var answer: String
+    private lateinit var choice1: Button
+    private lateinit var choice2: Button
+    private lateinit var choice3: Button
+    private lateinit var choice4: Button
+    private lateinit var dataReference: DatabaseReference
     private lateinit var nextButton: Button
-    private var count=0
-    private var answered=false
+    private var count = 0
+    private var answered = false
     private lateinit var backgroundTintList: ColorStateList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_casual_quiz)
-        database= FirebaseDatabase.getInstance("https://living-in-christ-default-rtdb.asia-southeast1.firebasedatabase.app")
+        database =
+            FirebaseDatabase.getInstance("https://living-in-christ-default-rtdb.asia-southeast1.firebasedatabase.app")
         database.setPersistenceEnabled(true)
-        dataReference=database.reference.child("quizzes")
+        dataReference = database.reference.child("quizzes")
 
 
-        questionQuiz=findViewById(R.id.questionquiz)
-        choice1=findViewById(R.id.choice1)
-        choice2=findViewById(R.id.choice2)
-        choice3=findViewById(R.id.choice3)
-        choice4=findViewById(R.id.choice4)
-        nextButton=findViewById(R.id.nextq)
-        backgroundTintList= choice1.backgroundTintList!!
+        questionQuiz = findViewById(R.id.questionquiz)
+        choice1 = findViewById(R.id.choice1)
+        choice2 = findViewById(R.id.choice2)
+        choice3 = findViewById(R.id.choice3)
+        choice4 = findViewById(R.id.choice4)
+        nextButton = findViewById(R.id.nextq)
+        backgroundTintList = choice1.backgroundTintList!!
 
         checkDatabase()
 
 
+    }
 
 
-
-
-        }
-
-
-    override fun mReadDataOnce(listener:OnGetDataListener) {
+    override fun mReadDataOnce(listener: OnGetDataListener) {
         listener.onStart();
-        dataReference.addListenerForSingleValueEvent (
-            object:ValueEventListener{
+        dataReference.addListenerForSingleValueEvent(
+            object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     listener.onSuccess(dataSnapshot);
                 }
@@ -70,7 +67,6 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
     }
 
 
-
     override fun checkDatabase() {
         mReadDataOnce(object : OnGetDataListener {
             override fun onStart() {
@@ -82,24 +78,26 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
                     for (d in data.children!!) {
                         d.getValue(Quiz::class.java)?.let { arrayList.add(it) }
                     }
-                    }
+                }
                 arrayList.shuffle()
                 quizDisplay()
-                count+=1
+                count += 1
                 handleAnswer()
 
                 nextButton.setOnClickListener {
                     if (answered) {
-                       nextQuestion()
-                    }
-                    else{
-                        MaterialAlertDialogBuilder(this@CasualQuiz).setMessage("Do you want to skip? " +
-                                "You have not answered the question.").setTitle("Confirmation").setPositiveButton("Yes"){
-                                _,_-> nextQuestion() }.setNegativeButton("No",null).show()
+                        nextQuestion()
+                    } else {
+                        MaterialAlertDialogBuilder(this@CasualQuiz).setMessage(
+                            "Do you want to skip? " +
+                                    "You have not answered the question."
+                        ).setTitle("Confirmation")
+                            .setPositiveButton("Yes") { _, _ -> nextQuestion() }
+                            .setNegativeButton("No", null).show()
                     }
                 }
 
-                }
+            }
 
             override fun onFailed(databaseError: DatabaseError?) {
                 //DO SOME THING WHEN GET DATA FAILED HERE
@@ -108,170 +106,183 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
     }
 
     override fun randomSetter(): List<Int> {
-        var set= setOf(1,2,3,4)
-        val first=set.random()
-        set=set.minus(first)
-        val second=set.random()
-        set=set.minus(second)
-        val third=set.random()
-        set=set.minus(third)
-        val fourth=set.iterator().next()
-        return listOf(first,second,third,fourth)
+        var set = setOf(1, 2, 3, 4)
+        val first = set.random()
+        set = set.minus(first)
+        val second = set.random()
+        set = set.minus(second)
+        val third = set.random()
+        set = set.minus(third)
+        val fourth = set.iterator().next()
+        return listOf(first, second, third, fourth)
 
     }
 
-    override fun setButtonVal(index:Int, choice:String, list:List<Int>){
-        when(list[index]) {
+    override fun setButtonVal(index: Int, choice: String, list: List<Int>) {
+        when (list[index]) {
             1 -> {
-                choice1.text=choice
+                choice1.text = choice
             }
             2 -> {
-                choice2.text=choice
+                choice2.text = choice
             }
             3 -> {
-                choice3.text=choice
+                choice3.text = choice
             }
             4 -> {
-                choice4.text=choice
+                choice4.text = choice
             }
         }
 
     }
 
-    override fun quizDisplay(){
-        if (count<arrayList.size){
-            val quiz=arrayList[count]
-            answer=quiz.answer
-            questionQuiz.text=quiz.question
-            val list=randomSetter()
-            setButtonVal(0,quiz.choice1,list)
-            setButtonVal(1,quiz.choice2,list)
-            setButtonVal(2,quiz.choice3,list)
-            setButtonVal(3,quiz.choice4,list)
+    override fun quizDisplay() {
+        if (count < arrayList.size) {
+            val quiz = arrayList[count]
+            answer = quiz.answer
+            questionQuiz.text = quiz.question
+            val list = randomSetter()
+            setButtonVal(0, quiz.choice1, list)
+            setButtonVal(1, quiz.choice2, list)
+            setButtonVal(2, quiz.choice3, list)
+            setButtonVal(3, quiz.choice4, list)
 
 
-
-        }
-        else{
-            Toast.makeText(this,"Finished quiz. Thank you for playing",Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Finished quiz. Thank you for playing", Toast.LENGTH_SHORT).show()
             finish()
         }
 
-        answered=false
+        answered = false
 
     }
 
-    override fun handleAnswer(){
-        var answerId: Int? =null
+    override fun handleAnswer() {
+        var answerId: Int? = null
         val shake: Animation = AnimationUtils.loadAnimation(this, R.anim.shake)
 
-        when(answer){
-            choice1.text ->{answerId=choice1.id}
-            choice2.text ->{answerId=choice2.id}
-            choice3.text ->{answerId=choice3.id}
-            choice4.text ->{answerId=choice4.id}
+        when (answer) {
+            choice1.text -> {
+                answerId = choice1.id
+            }
+            choice2.text -> {
+                answerId = choice2.id
+            }
+            choice3.text -> {
+                answerId = choice3.id
+            }
+            choice4.text -> {
+                answerId = choice4.id
+            }
         }
 
         choice1.setOnClickListener {
-            if (answerId==choice1.id){
+            if (answerId == choice1.id) {
                 choice1.startAnimation(shake)
-                choice1.backgroundTintList=this.resources.getColorStateList(R.color.green,this.theme)
+                choice1.backgroundTintList =
+                    this.resources.getColorStateList(R.color.green, this.theme)
 
-            }
-            else{
+            } else {
                 if (answerId != null) {
-                    val button=findViewById<Button>(answerId)
-                    button.backgroundTintList=this.resources.getColorStateList(R.color.green,this.theme)
+                    val button = findViewById<Button>(answerId)
+                    button.backgroundTintList =
+                        this.resources.getColorStateList(R.color.green, this.theme)
                     button.startAnimation(shake)
-                    choice1.backgroundTintList=this.resources.getColorStateList(R.color.red,this.theme)
+                    choice1.backgroundTintList =
+                        this.resources.getColorStateList(R.color.red, this.theme)
 
                 }
             }
-            answered=true
+            answered = true
             disableButtonAfterAnswering()
             vibrateAns(this)
         }
 
         choice2.setOnClickListener {
-            if (answerId==choice2.id){
+            if (answerId == choice2.id) {
                 choice2.startAnimation(shake)
-                choice2.backgroundTintList=this.resources.getColorStateList(R.color.green,this.theme)
+                choice2.backgroundTintList =
+                    this.resources.getColorStateList(R.color.green, this.theme)
 
-            }
-            else{
+            } else {
                 if (answerId != null) {
-                    val button=findViewById<Button>(answerId)
-                    button.backgroundTintList=this.resources.getColorStateList(R.color.green,this.theme)
+                    val button = findViewById<Button>(answerId)
+                    button.backgroundTintList =
+                        this.resources.getColorStateList(R.color.green, this.theme)
                     button.startAnimation(shake)
-                    choice2.backgroundTintList=this.resources.getColorStateList(R.color.red,this.theme)
+                    choice2.backgroundTintList =
+                        this.resources.getColorStateList(R.color.red, this.theme)
                 }
             }
-            answered=true
+            answered = true
             disableButtonAfterAnswering()
             vibrateAns(this)
 
         }
         choice3.setOnClickListener {
-            if (answerId==choice3.id){
+            if (answerId == choice3.id) {
                 choice3.startAnimation(shake)
-                choice3.backgroundTintList=this.resources.getColorStateList(R.color.green,this.theme)
-            }
-            else{
+                choice3.backgroundTintList =
+                    this.resources.getColorStateList(R.color.green, this.theme)
+            } else {
                 if (answerId != null) {
-                    val button=findViewById<Button>(answerId)
-                    button.backgroundTintList=this.resources.getColorStateList(R.color.green,this.theme)
+                    val button = findViewById<Button>(answerId)
+                    button.backgroundTintList =
+                        this.resources.getColorStateList(R.color.green, this.theme)
                     button.startAnimation(shake)
-                    choice3.backgroundTintList=this.resources.getColorStateList(R.color.red,this.theme)
+                    choice3.backgroundTintList =
+                        this.resources.getColorStateList(R.color.red, this.theme)
                 }
             }
-            answered=true
+            answered = true
             disableButtonAfterAnswering()
             vibrateAns(this)
 
         }
         choice4.setOnClickListener {
-            if (answerId==choice4.id){
+            if (answerId == choice4.id) {
                 choice4.startAnimation(shake)
-                choice4.backgroundTintList=this.resources.getColorStateList(R.color.green,this.theme)
+                choice4.backgroundTintList =
+                    this.resources.getColorStateList(R.color.green, this.theme)
 
-            }
-            else{
+            } else {
                 if (answerId != null) {
-                    val button=findViewById<Button>(answerId)
-                    button.backgroundTintList=this.resources.getColorStateList(R.color.green,this.theme)
+                    val button = findViewById<Button>(answerId)
+                    button.backgroundTintList =
+                        this.resources.getColorStateList(R.color.green, this.theme)
                     button.startAnimation(shake)
-                    choice4.backgroundTintList=this.resources.getColorStateList(R.color.red,this.theme)
+                    choice4.backgroundTintList =
+                        this.resources.getColorStateList(R.color.red, this.theme)
                 }
             }
-            answered=true
+            answered = true
             disableButtonAfterAnswering()
             vibrateAns(this)
 
         }
 
 
-
     }
 
-    override fun resetState(){
-        choice1.backgroundTintList=backgroundTintList
-        choice2.backgroundTintList=backgroundTintList
-        choice3.backgroundTintList=backgroundTintList
-        choice4.backgroundTintList=backgroundTintList
-        choice1.isEnabled=true
-        choice2.isEnabled=true
-        choice3.isEnabled=true
-        choice4.isEnabled=true
+    override fun resetState() {
+        choice1.backgroundTintList = backgroundTintList
+        choice2.backgroundTintList = backgroundTintList
+        choice3.backgroundTintList = backgroundTintList
+        choice4.backgroundTintList = backgroundTintList
+        choice1.isEnabled = true
+        choice2.isEnabled = true
+        choice3.isEnabled = true
+        choice4.isEnabled = true
     }
 
-    override fun disableButtonAfterAnswering(){
-        choice1.isEnabled=false
-        choice2.isEnabled=false
-        choice3.isEnabled=false
-        choice4.isEnabled=false
+    override fun disableButtonAfterAnswering() {
+        choice1.isEnabled = false
+        choice2.isEnabled = false
+        choice3.isEnabled = false
+        choice4.isEnabled = false
     }
 
-    override fun nextQuestion(){
+    override fun nextQuestion() {
         quizDisplay()
         count += 1
         resetState()
@@ -279,4 +290,4 @@ class CasualQuiz : AppCompatActivity(),QuizHandler {
     }
 
 
-    }
+}

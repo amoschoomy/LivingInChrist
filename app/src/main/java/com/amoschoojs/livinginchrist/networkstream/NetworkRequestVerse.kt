@@ -5,7 +5,6 @@ import android.net.ConnectivityManager
 import android.net.ConnectivityManager.NetworkCallback
 import android.net.Network
 import android.os.Build
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import kotlinx.coroutines.Dispatchers
@@ -16,8 +15,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 
-class NetworkRequestVerse () {
-
+class NetworkRequestVerse {
 
 
     companion object {
@@ -72,7 +70,7 @@ class NetworkRequestVerse () {
 
 
                 if (inputStream != null) {
-                    val json=parseJSON(inputStream)
+                    val json = parseJSON(inputStream)
                     inputStream.close()
                     conn.disconnect()
                     json
@@ -95,8 +93,8 @@ class NetworkRequestVerse () {
         private fun parseJSON(inputStream: InputStream): VerseOfTheDay {
 
 
-            val inputStreamReader=InputStreamReader(inputStream,"UTF-8")
-            val json=JsonParser.parseReader(inputStreamReader)
+            val inputStreamReader = InputStreamReader(inputStream, "UTF-8")
+            val json = JsonParser.parseReader(inputStreamReader)
             inputStreamReader.close()
             val gson = Gson()
             inputStream.close()
@@ -104,5 +102,6 @@ class NetworkRequestVerse () {
         }
 
 
-    }}
+    }
+}
 

@@ -1,11 +1,9 @@
 package com.amoschoojs.livinginchrist
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +14,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
-// TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -27,10 +24,10 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class HistoryFragment : Fragment() {
-    private lateinit var arrayList:ArrayList<String>
-    private lateinit var recyclerViewAdapter:RecyclerViewAdapter
-    private val arrayType: Type =object: TypeToken<ArrayList<String?>?>(){}.type
-    private val gson=Gson()
+    private lateinit var arrayList: ArrayList<String>
+    private lateinit var recyclerViewAdapter: RecyclerViewAdapter
+    private val arrayType: Type = object : TypeToken<ArrayList<String?>?>() {}.type
+    private val gson = Gson()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,23 +39,27 @@ class HistoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val sharedPreferences=activity?.getSharedPreferences("abc",0)
+        val sharedPreferences = activity?.getSharedPreferences("abc", 0)
         val deleteHistory: FloatingActionButton = view.findViewById(R.id.deletefab)
         deleteHistory.setOnClickListener {
 
             activity?.let { it1 ->
-                MaterialAlertDialogBuilder(it1).setTitle("Delete Confirmation").
-                    setMessage("Are you sure you want to delete the history?").setPositiveButton("Yes",)
-                { _, _ ->
-                    run {
-                        arrayList.clear()
-                        val array=gson.toJson(arrayList)
-                        val editor=sharedPreferences?.edit()?.putString("history",array)?.putBoolean("clearedHistory",true)
-                        editor?.apply()
-                        updateAdapter()
-                        Snackbar.make(view, "Deleted successfully", Snackbar.LENGTH_SHORT).show()
-                    }
-                }.setNegativeButton("Cancel"){ _, _ ->}   .show() }
+                MaterialAlertDialogBuilder(it1).setTitle("Delete Confirmation")
+                    .setMessage("Are you sure you want to delete the history?")
+                    .setPositiveButton("Yes")
+                    { _, _ ->
+                        run {
+                            arrayList.clear()
+                            val array = gson.toJson(arrayList)
+                            val editor = sharedPreferences?.edit()?.putString("history", array)
+                                ?.putBoolean("clearedHistory", true)
+                            editor?.apply()
+                            updateAdapter()
+                            Snackbar.make(view, "Deleted successfully", Snackbar.LENGTH_SHORT)
+                                .show()
+                        }
+                    }.setNegativeButton("Cancel") { _, _ -> }.show()
+            }
 
         }
     }
@@ -69,15 +70,15 @@ class HistoryFragment : Fragment() {
 
     }
 
-    private fun updateAdapter(){
-        val sharedPreferences=activity?.getSharedPreferences("abc",0)
-        val array=sharedPreferences?.getString("history","[]")
-        arrayList=gson.fromJson(array,arrayType)
-        val linearLayoutManager=LinearLayoutManager(requireContext())
-        val recyclerView:RecyclerView?=view?.findViewById(R.id.recview)
-        recyclerView?.layoutManager=linearLayoutManager
-        recyclerView?.adapter= RecyclerViewAdapter(arrayList)
-        recyclerViewAdapter= recyclerView?.adapter as RecyclerViewAdapter
+    private fun updateAdapter() {
+        val sharedPreferences = activity?.getSharedPreferences("abc", 0)
+        val array = sharedPreferences?.getString("history", "[]")
+        arrayList = gson.fromJson(array, arrayType)
+        val linearLayoutManager = LinearLayoutManager(requireContext())
+        val recyclerView: RecyclerView? = view?.findViewById(R.id.recview)
+        recyclerView?.layoutManager = linearLayoutManager
+        recyclerView?.adapter = RecyclerViewAdapter(arrayList)
+        recyclerViewAdapter = recyclerView?.adapter as RecyclerViewAdapter
         recyclerViewAdapter.notifyDataSetChanged()
     }
 

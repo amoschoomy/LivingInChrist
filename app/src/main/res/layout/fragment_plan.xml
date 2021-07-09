@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clickable="true"
     android:background="#FFFFFF"
+    android:clickable="true"
     tools:context=".PlanFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,8 +39,8 @@
             android:id="@+id/biblestudy"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text="Bible Study"
             android:enabled="false"
+            android:text="Bible Study"
             app:layout_constraintBottom_toTopOf="@+id/worship2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -51,8 +51,8 @@
             android:id="@+id/worship2"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text="Worship"
             android:enabled="false"
+            android:text="Worship"
             app:layout_constraintBottom_toTopOf="@+id/quiettime2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

@@ -9,7 +9,8 @@ import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.shape.MaterialShapeDrawable
 
-class BookStudyAdapter(private val qnas:ArrayList<QnAModel>):RecyclerView.Adapter<BookStudyAdapter.ViewHolder>() {
+class BookStudyAdapter(private val qnas: ArrayList<QnAModel>) :
+    RecyclerView.Adapter<BookStudyAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // Your holder should contain and initialize a member variable
@@ -27,28 +28,33 @@ class BookStudyAdapter(private val qnas:ArrayList<QnAModel>):RecyclerView.Adapte
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val qna=qnas[holder.adapterPosition]
+        val qna = qnas[holder.adapterPosition]
 
-        val qtv=holder.question
-        val atv=holder.answer
-        val context=qtv.context
+        val qtv = holder.question
+        val atv = holder.answer
+        val context = qtv.context
 
-        val shapeDrawable= MaterialShapeDrawable()
-        shapeDrawable.fillColor= ContextCompat.getColorStateList(context,android.R.color.transparent)
-        shapeDrawable.setStroke(4.0f, ContextCompat.getColor(context,R.color.light_blue_A200))
-        ViewCompat.setBackground(qtv,shapeDrawable);
+        val shapeDrawable = MaterialShapeDrawable()
+        shapeDrawable.fillColor =
+            ContextCompat.getColorStateList(context, android.R.color.transparent)
+        shapeDrawable.setStroke(4.0f, ContextCompat.getColor(context, R.color.light_blue_A200))
+        ViewCompat.setBackground(qtv, shapeDrawable);
 
-        val shapeDrawable2=MaterialShapeDrawable()
-        shapeDrawable2.fillColor= ContextCompat.getColorStateList(context,android.R.color.transparent)
-        shapeDrawable2.setStroke(4.0f, ContextCompat.getColor(context,
-            R.color.light_yellow
-        ))
-        ViewCompat.setBackground(atv,shapeDrawable2);
+        val shapeDrawable2 = MaterialShapeDrawable()
+        shapeDrawable2.fillColor =
+            ContextCompat.getColorStateList(context, android.R.color.transparent)
+        shapeDrawable2.setStroke(
+            4.0f, ContextCompat.getColor(
+                context,
+                R.color.light_yellow
+            )
+        )
+        ViewCompat.setBackground(atv, shapeDrawable2);
 
 
 
-        qtv.text=qna.question
-        atv.text=qna.answer
+        qtv.text = qna.question
+        atv.text = qna.answer
 
     }
 
