@@ -6,6 +6,9 @@
         android:title="Rate Us"
         app:showAsAction="never" />
     <item
+        android:id="@+id/usagetips"
+        android:title="How to Use" />
+    <item
         android:id="@+id/settings"
         android:title="Settings"
         app:showAsAction="never" />
