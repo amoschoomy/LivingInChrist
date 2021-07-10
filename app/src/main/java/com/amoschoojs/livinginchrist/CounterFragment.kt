@@ -69,6 +69,8 @@ class CounterFragment : Fragment() {
     private fun chronometerHandler(view: View) {
         val duration = view.findViewById<Chronometer>(R.id.duration)
         val current = System.currentTimeMillis()
+
+        // get time elapsed since user last exits and time stored
         val calc = SystemClock.elapsedRealtime() - (current - sharedPreferences.getLong(
             "startTime",
             current
@@ -76,6 +78,8 @@ class CounterFragment : Fragment() {
 
         val resetButton = view.findViewById<Button>(R.id.reset)
         val startButton = view.findViewById<Button>(R.id.countstreak)
+
+        //if count has started before, restart the count from where user left off
         if (countStarted) {
             duration.base = calc
             resetButton.isEnabled = true
@@ -83,12 +87,15 @@ class CounterFragment : Fragment() {
             duration.start()
         }
 
+        // user start new count
         startButton.setOnClickListener {
             if (!countStarted) {
                 duration.base = SystemClock.elapsedRealtime()
                 duration.start()
                 val start = System.currentTimeMillis()
                 sharedPreferences.edit()?.putLong("startTime", start)?.apply()
+                //put user starttime into shared
+                //Preferences
                 countStarted = true
                 resetButton.isEnabled = true
                 startButton.isEnabled = false
@@ -96,6 +103,7 @@ class CounterFragment : Fragment() {
 
         }
 
+        // user decide to reset the count
         resetButton.setOnClickListener {
             duration.stop()
             arrayList.add(duration.text.toString())
@@ -111,6 +119,9 @@ class CounterFragment : Fragment() {
     override fun onPause() {
         val arrayString = gson.toJson(arrayList)
         val sharedPreferencesEditor = sharedPreferences.edit()
+
+
+        // check if user deleted histroy when activity out of focus
         val deleted = sharedPreferences.getBoolean("clearedHistory", false)
         if (!deleted) {
             sharedPreferencesEditor?.putString("history", arrayString)
@@ -123,9 +134,12 @@ class CounterFragment : Fragment() {
     }
 
     override fun onStop() {
+
+        // user exit the app completely or OS destroyed, so save the current counter for it to be used later
         val duration = view?.findViewById<Chronometer>(R.id.duration)
         val sharedPreferencesEditor = activity?.getSharedPreferences("abc", 0)?.edit()
-        sharedPreferencesEditor?.putBoolean("countstatus", countStarted)?.apply()
+        sharedPreferencesEditor?.putBoolean("countstatus", countStarted)
+            ?.apply() //saved whether an active count is running or not
         sharedPreferencesEditor?.putString("currentTime", duration?.text.toString())?.apply()
         super.onStop()
     }

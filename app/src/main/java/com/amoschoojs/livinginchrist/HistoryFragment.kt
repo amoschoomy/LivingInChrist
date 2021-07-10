@@ -16,6 +16,9 @@ import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
 
+/**
+ * History Fragment
+ */
 class HistoryFragment : Fragment() {
     private lateinit var arrayList: ArrayList<String>
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
@@ -36,6 +39,8 @@ class HistoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         sharedPreferences = activity?.getSharedPreferences("abc", 0)!!
         val deleteHistory: FloatingActionButton = view.findViewById(R.id.deletefab)
+
+        //listener when user click the delete button
         deleteHistory.setOnClickListener {
 
             activity?.let { it1 ->
@@ -46,10 +51,11 @@ class HistoryFragment : Fragment() {
                         run {
                             arrayList.clear()
                             val array = gson.toJson(arrayList)
+                            //put in sharedPreferrences the new array
                             val editor = sharedPreferences.edit()?.putString("history", array)
                                 ?.putBoolean("clearedHistory", true)
                             editor?.apply()
-                            updateAdapter()
+                            updateAdapter() //update adapter
                             Snackbar.make(view, "Deleted successfully", Snackbar.LENGTH_SHORT)
                                 .show()
                         }
@@ -61,10 +67,13 @@ class HistoryFragment : Fragment() {
 
     override fun setMenuVisibility(menuVisible: Boolean) {
         super.setMenuVisibility(menuVisible)
-        updateAdapter()
+        updateAdapter() //update adapter whenever menu becomes visible vice versa
 
     }
 
+    /**
+     * Function to update adapter in the layout
+     */
     private fun updateAdapter() {
         val array = sharedPreferences.getString("history", "[]")
         arrayList = gson.fromJson(array, arrayType)

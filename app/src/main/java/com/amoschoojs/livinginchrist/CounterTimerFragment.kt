@@ -9,7 +9,9 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-
+/**
+ * CounterTimer Fragment
+ */
 class CounterTimerFragment : Fragment() {
 
     override fun onCreateView(
@@ -22,6 +24,10 @@ class CounterTimerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        /*
+        Set tab layout and adapter on this fragment
+         */
         val tabAdapter = TabAdapter(this)
         val tabLayout: TabLayout = view.findViewById(R.id.tabbar)
         val viewPager: ViewPager2 = view.findViewById(R.id.viewPager2)
