@@ -37,9 +37,10 @@ class TimedQuiz : AppCompatActivity(), QuizHandler {
     private var timeExceeded = false
     private lateinit var animation: ObjectAnimator
     private lateinit var backgroundTintList: ColorStateList
-
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var progressBar: ProgressBar
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_timed_quiz)
@@ -47,6 +48,7 @@ class TimedQuiz : AppCompatActivity(), QuizHandler {
         database =
             FirebaseDatabase.getInstance("https://living-in-christ-default-rtdb.asia-southeast1.firebasedatabase.app")
 
+        //Firebase add offline capabilities
         try {
             database.setPersistenceEnabled(true)
         } catch (e: Exception) {
@@ -66,6 +68,7 @@ class TimedQuiz : AppCompatActivity(), QuizHandler {
 
         val connectedBefore = sharedPreferences.getBoolean("connectedBefore", false)
 
+        //Logic is same as Casual Quiz class
         NetworkRequestVerse.checkNetworkInfo(this, object : OnConnectionStatusChanged {
             override fun onChange(type: Boolean) {
                 if (type) {
@@ -89,15 +92,24 @@ class TimedQuiz : AppCompatActivity(), QuizHandler {
     }
 
 
+    /**
+     * Function to count the time limit left on a quiz
+     */
     private fun countTime() {
+
+        //uses Object Animator to set progress bar movement
         animation = ObjectAnimator.ofInt(progressBar, "progress", 0, 100)
         animation.duration = 30000
         animation.interpolator = DecelerateInterpolator()
+
+
         animation.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(p0: Animator?) {
             }
 
             override fun onAnimationEnd(p0: Animator?) {
+                //if user not answered, notify them in toast message
+                // and disable button from answering
                 if (!answered) {
                     Toast.makeText(
                         applicationContext,
@@ -107,6 +119,7 @@ class TimedQuiz : AppCompatActivity(), QuizHandler {
                     disableButtonAfterAnswering()
                     timeExceeded = true
                 }
+                //calculate the score achieved by user
                 calcScore()
             }
 
@@ -117,7 +130,7 @@ class TimedQuiz : AppCompatActivity(), QuizHandler {
             }
 
         })
-        animation.start()
+        animation.start() //start animation when loaded
 
 
     }
@@ -208,6 +221,7 @@ class TimedQuiz : AppCompatActivity(), QuizHandler {
 
 
         } else {
+            //Similar to Casual Quiz class but total score is shown at the end of the quiz
             finish()
             val scoreRound = scoreView.text.toString().filter { it.isDigit() }
             Toast.makeText(
@@ -218,6 +232,8 @@ class TimedQuiz : AppCompatActivity(), QuizHandler {
             val sharedPreferences = getSharedPreferences("abc", 0)
             val prevHighScore = sharedPreferences.getInt("highscore", 0)
 
+            //if current score achieved is higher than high score, it is the new high score
+            // and save it to sharedPreferences
             if (scoreRound.toInt() > prevHighScore) {
                 sharedPreferences.edit().putInt("highscore", scoreRound.toInt()).apply()
             }
@@ -377,6 +393,11 @@ class TimedQuiz : AppCompatActivity(), QuizHandler {
         finish()
     }
 
+    /**
+     * Function to calculate user score
+     * Scaled using time left after a user submit the answer
+     * 1 base point if correct answer, 0 otherwise
+     */
     private fun calcScore() {
         if (correct) {
             var score = scoreView.text.toString().filter { it.isDigit() }.toInt()

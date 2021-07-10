@@ -14,6 +14,9 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
+/**
+ * Specific Book Activity
+ */
 class SpecificBook : AppCompatActivity() {
     private lateinit var arrayList: ArrayList<QnAModel>
     private val arrayType: Type = object : TypeToken<ArrayList<QnAModel>?>() {}.type
@@ -24,6 +27,7 @@ class SpecificBook : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_specific_book)
+
         val recview = findViewById<RecyclerView>(R.id.specrecview)
 
         book = intent.getStringExtra("whatBook")!!
@@ -34,6 +38,9 @@ class SpecificBook : AppCompatActivity() {
 
         arrayList = gson.fromJson(bookValues, arrayType)
 
+        /*
+        Set the book arraylist to the adapter
+         */
         val specAdapter = BookStudyAdapter(arrayList)
         val linearLayoutManager = LinearLayoutManager(this)
         recview.layoutManager = linearLayoutManager
@@ -42,7 +49,14 @@ class SpecificBook : AppCompatActivity() {
 
         val addFAB = findViewById<FloatingActionButton>(R.id.addqna)
 
+        /*
+        Add content to the specific book
+         */
         addFAB.setOnClickListener {
+
+            /*
+            Set up dialog view to be shown to user
+             */
             val linearLayout = LinearLayout(this)
             linearLayout.orientation = LinearLayout.VERTICAL
             val titleBox = EditText(this)
@@ -51,6 +65,8 @@ class SpecificBook : AppCompatActivity() {
             val contentBox = EditText(this)
             contentBox.hint = "Answer/Explanation"
             linearLayout.addView(contentBox)
+
+
             MaterialAlertDialogBuilder(this).setTitle("Add Topic").setView(linearLayout)
                 .setPositiveButton("Submit") { _, _ ->
                     val qna = QnAModel(titleBox.text.toString(), contentBox.text.toString())
@@ -66,6 +82,8 @@ class SpecificBook : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
+
+        //Put array list into shared Preferences when activity is stopped
         val arrayString = gson.toJson(arrayList)
         sharedPreferences.edit().putString(book, arrayString).apply()
     }

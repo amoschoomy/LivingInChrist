@@ -15,6 +15,9 @@ import java.time.Instant
 import java.time.ZoneId
 
 
+/**
+ * Plan Fragment class
+ */
 class PlanFragment : Fragment() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
@@ -45,6 +48,7 @@ class PlanFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         qt1 = view.findViewById(R.id.quiettime)
         w1 = view.findViewById(R.id.worship)
         bibleStudy = view.findViewById(R.id.biblestudy)
@@ -56,7 +60,10 @@ class PlanFragment : Fragment() {
 
         val number = sharedPreferences.getInt("number", 0)
         completionVal.text = "Completed " + (number).toString() + " times"
+
+
         val showPlanMessage: Boolean = sharedPreferences.getBoolean("showplanmessage", true)
+        //Popup message can be disabled by user
         if (showPlanMessage) {
             activity?.let {
                 MaterialAlertDialogBuilder(it).setTitle("How to Use")
@@ -72,9 +79,15 @@ class PlanFragment : Fragment() {
         checkBoxLogic()
     }
 
+    /**
+     * Function for checkboxes logic
+     */
     private fun checkBoxLogic() {
-        val zoneId = ZoneId.systemDefault()
 
+        /*
+        checkboxes will be reset at midnight everytime
+         */
+        val zoneId = ZoneId.systemDefault()
         val timeNow = Instant.now().atZone(zoneId)
         val day = sharedPreferences.getInt("daycomplete", timeNow.dayOfMonth)
         val month = sharedPreferences.getInt("monthcomplete", timeNow.monthValue)
@@ -83,14 +96,20 @@ class PlanFragment : Fragment() {
             disableCheckboxes(false)
             editor.putBoolean("submitted", false).apply()
         }
+
+
+        //submit button listener
         submitButton.setOnClickListener {
             val submittedDay = sharedPreferences.getBoolean("submitted", false)
-            if (qt2.isChecked && !submittedDay) {
+            if (qt2.isChecked && !submittedDay) { //only react if user have ticked all
                 activity?.let {
                     MaterialAlertDialogBuilder(it).setTitle("Submit Confirmation")
                         .setMessage("Have you completed the activities and want to submit?")
                         .setNegativeButton("No, I have not completed yet") { _, _ ->
                         }.setPositiveButton("Yes")
+
+                        //put data of user submission into sharedPreferences
+                        //and update UI
                         { _, _ ->
                             disableCheckboxes(true)
                             val number =
@@ -109,6 +128,10 @@ class PlanFragment : Fragment() {
             }
         }
 
+        /*
+        Block of codes below is to handle logic when the checkboxes are ticked
+        aka disabling and enabling respective next and previous checkboxes
+         */
         qt1.setOnCheckedChangeListener { compoundButton, _ ->
             if (compoundButton.isChecked) {
                 w1.isEnabled = true
@@ -157,6 +180,9 @@ class PlanFragment : Fragment() {
 
     }
 
+    /**
+     * Function to uncheck the checkboxes
+     */
     private fun unCheckCheckBoxes() {
 
 
@@ -174,6 +200,10 @@ class PlanFragment : Fragment() {
         editor.apply()
     }
 
+    /**
+     * Function to disable all checkboxes
+     * @param status to check whether the first checkbox should be unlocked or not
+     */
     private fun disableCheckboxes(status: Boolean) {
 
 
@@ -198,6 +228,10 @@ class PlanFragment : Fragment() {
 
     }
 
+    /**
+     * Function to restore checkbox states according to
+     * value stored in shared preferences
+     */
     private fun restoreCheckboxes() {
 
         qt1.isChecked = sharedPreferences.getBoolean("qt1Checked", false)

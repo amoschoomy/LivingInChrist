@@ -1,6 +1,8 @@
 package com.amoschoojs.livinginchrist
 
-
+/**
+ * Quiz POJO class
+ */
 class Quiz(
 
     val question: String = "",

@@ -10,7 +10,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-
+/**
+ * Quiz Fragment class
+ */
 class QuizFragment : Fragment() {
 
 
@@ -25,6 +27,7 @@ class QuizFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val howToPlayButton = view.findViewById<Button>(R.id.how)
         val scoreMode = view.findViewById<Button>(R.id.score)
         val casualMode = view.findViewById<Button>(R.id.casual)

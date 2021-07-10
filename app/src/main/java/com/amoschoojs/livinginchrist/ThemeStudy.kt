@@ -14,13 +14,19 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
-
+/**
+ * AlertDialogStudy class to reuse AlertDialog
+ */
 class AlertDialogStudy {
     companion object {
         @JvmStatic
         fun showDialogStudy(context: Context, arrayList: ArrayList<String>) {
             val sharedPreferences = context.getSharedPreferences("abc", 0)
             val sharedPreferencesEditor = context.getSharedPreferences("abc", 0).edit()
+
+            /*
+            Setup dialog builder view
+             */
             val linearLayout = LinearLayout(context)
             linearLayout.orientation = LinearLayout.VERTICAL
             val titleBox = EditText(context)
@@ -29,6 +35,8 @@ class AlertDialogStudy {
             val contentBox = EditText(context)
             contentBox.hint = "Content"
             linearLayout.addView(contentBox)
+
+
             val alertDialogBuilder =
                 MaterialAlertDialogBuilder(context).setTitle("Add Topic").setView(linearLayout)
                     .setPositiveButton("Submit", null)
@@ -36,7 +44,10 @@ class AlertDialogStudy {
 
             val positiveButton = alertDialogBuilder.getButton(AlertDialog.BUTTON_POSITIVE)
             positiveButton.setOnClickListener {
-                if (sharedPreferences.contains(titleBox.text.toString())) {
+                if (sharedPreferences.contains(titleBox.text.toString())) { //If title already found
+                    //do not allow user to add the same title
+                    //NOTE: Probably logic could be improved here to check for content
+                    // but for now this is the logic
                     Toast.makeText(
                         context,
                         "Found another similar title. Please put a different title",
@@ -55,7 +66,9 @@ class AlertDialogStudy {
     }
 }
 
-
+/**
+ * ThemeStudy activity
+ */
 class ThemeStudy : AppCompatActivity() {
 
     private lateinit var arrayPeace: ArrayList<String>
@@ -84,6 +97,10 @@ class ThemeStudy : AppCompatActivity() {
         val selfControlSpinner = findViewById<Spinner>(R.id.selfcontrolspinner)
         sharedPreferences = getSharedPreferences("abc", 0)
         editor = getSharedPreferences("abc", 0).edit()
+
+        /*
+        Get all the arrays from shared Preferences
+         */
         var arrayString = sharedPreferences.getString("arraypeace", "[]")
         arrayPeace = gson.fromJson(arrayString, arrayType)
 
@@ -103,6 +120,11 @@ class ThemeStudy : AppCompatActivity() {
         peaceAdapter = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, arrayPeace)
         peaceSpinner.adapter = peaceAdapter
 
+
+        /*
+        Block of codes below to set up listener on the spinner
+        and select items accordingly
+         */
         peaceSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
@@ -220,6 +242,9 @@ class ThemeStudy : AppCompatActivity() {
 
     }
 
+    /**
+     * Function to configure logic and action of FABs respective to the spinners
+     */
     private fun addButtonsAction() {
         val addPeace = findViewById<FloatingActionButton>(R.id.addpeace)
         val addLove = findViewById<FloatingActionButton>(R.id.addlove)
@@ -256,6 +281,7 @@ class ThemeStudy : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
 
+        // save those arrays into shared Preferences
         editor.putString("arraypeace", gson.toJson(arrayPeace))
         editor.putString("arraylove", gson.toJson(arrayLove))
         editor.putString("arraykindess", gson.toJson(arrayKindness))

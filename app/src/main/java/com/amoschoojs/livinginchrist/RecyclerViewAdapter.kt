@@ -6,6 +6,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
+
+/**
+ * RecyclerViewAdapter for Streak Counting History
+ * @property dataSet arrayList to hold the dataset
+ */
 class RecyclerViewAdapter(private val dataSet: ArrayList<String>) :
     RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 

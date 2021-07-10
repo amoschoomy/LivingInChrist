@@ -129,7 +129,8 @@ class MainActivity : AppCompatActivity() {
                 } else if (!votdPreference) { //IF User dont want it, show this text instead
                     votdTextView.text = "Please activate Verse Of the Day Service in Settings"
                 } else { //e;se get user last connected verse
-                    val votdFromSP = sharedPreferences.getString("votd", "Please connect to the Internet")
+                    val votdFromSP =
+                        sharedPreferences.getString("votd", "Please connect to the Internet")
                     val html = Html.fromHtml(votdFromSP, HtmlCompat.FROM_HTML_MODE_COMPACT)
                     votdTextView.movementMethod = LinkMovementMethod.getInstance()
                     votdTextView.text = html
@@ -153,12 +154,14 @@ class MainActivity : AppCompatActivity() {
         val content = verse.content
         val displayRef = verse.displayRef
         val permalink = verse.permalink
-        val verseText = "<a href=\"$permalink\">\n$content\n <br>$displayRef </a>" //formatted according to HTML
+        val verseText =
+            "<a href=\"$permalink\">\n$content\n <br>$displayRef </a>" //formatted according to HTML
 
         val html = Html.fromHtml(verseText, HtmlCompat.FROM_HTML_MODE_COMPACT) //convert into HTML
         votdTextView.text = html
         votdTextView.movementMethod = LinkMovementMethod.getInstance()
-        getSharedPreferences("abc", 0).edit().putString("votd", verseText).apply() //put inside sharedPreferences
+        getSharedPreferences("abc", 0).edit().putString("votd", verseText)
+            .apply() //put inside sharedPreferences
 
 
     }
