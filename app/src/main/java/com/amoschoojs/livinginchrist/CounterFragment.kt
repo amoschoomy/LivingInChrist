@@ -13,7 +13,9 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
-
+/**
+ * Counter Checker Fragment
+ */
 class CounterFragment : Fragment() {
     private lateinit var arrayList: ArrayList<String>
     private var countStarted: Boolean = false
@@ -24,6 +26,9 @@ class CounterFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         sharedPreferences = activity?.getSharedPreferences("abc", 0)!!
+
+        //populate arraylist from sharedPreferences if there is history added,
+        // else just create new arraylist
         arrayList = if (!sharedPreferences.contains("history")) {
             val arrayString = gson.toJson(ArrayList<Int>())
             sharedPreferences.edit()?.putString("history", arrayString)
@@ -38,6 +43,7 @@ class CounterFragment : Fragment() {
         }
 
         super.onCreate(savedInstanceState)
+        // get from sharedPreferences if user have an active count streak
         countStarted = sharedPreferences.getBoolean("countstatus", false)
     }
 
@@ -52,10 +58,14 @@ class CounterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
-        chronometerHandler(view)
+        chronometerHandler(view) //handle chronometer view
     }
 
 
+    /**
+     * Handle chronometer view logic
+     * @param view the chronometer text view
+     */
     private fun chronometerHandler(view: View) {
         val duration = view.findViewById<Chronometer>(R.id.duration)
         val current = System.currentTimeMillis()

@@ -9,12 +9,18 @@ import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.shape.MaterialShapeDrawable
 
+/**
+ * BookStudyAdapter
+ * @property qnas ArrayList for [QnAModel]
+ */
 class BookStudyAdapter(private val qnas: ArrayList<QnAModel>) :
     RecyclerView.Adapter<BookStudyAdapter.ViewHolder>() {
 
+    /**
+     * ViewHolder class that extends [RecyclerView.ViewHolder]
+     */
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        // Your holder should contain and initialize a member variable
-        // for any view that will be set as you render a row
+
         val question: TextView = itemView.findViewById(R.id.question)
         val answer: TextView = itemView.findViewById(R.id.answer)
     }
@@ -38,7 +44,8 @@ class BookStudyAdapter(private val qnas: ArrayList<QnAModel>) :
         shapeDrawable.fillColor =
             ContextCompat.getColorStateList(context, android.R.color.transparent)
         shapeDrawable.setStroke(4.0f, ContextCompat.getColor(context, R.color.light_blue_A200))
-        ViewCompat.setBackground(qtv, shapeDrawable)
+
+        ViewCompat.setBackground(qtv, shapeDrawable) //set TextView borders
 
         val shapeDrawable2 = MaterialShapeDrawable()
         shapeDrawable2.fillColor =
@@ -49,8 +56,8 @@ class BookStudyAdapter(private val qnas: ArrayList<QnAModel>) :
                 R.color.light_yellow
             )
         )
-        ViewCompat.setBackground(atv, shapeDrawable2)
 
+        ViewCompat.setBackground(atv, shapeDrawable2) //set Text View borders
 
 
         qtv.text = qna.question

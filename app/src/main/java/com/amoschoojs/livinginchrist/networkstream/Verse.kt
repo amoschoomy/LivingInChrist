@@ -2,6 +2,9 @@ package com.amoschoojs.livinginchrist.networkstream
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * POJO class to handle incoming JSON format from HTTP GET
+ */
 class Verse
     (
     @SerializedName("text")
@@ -44,8 +47,4 @@ class Verse
 
     @SerializedName("merchandising")
     val merchandising: String
-) {
-    override fun toString(): String {
-        return content
-    }
-}
+)

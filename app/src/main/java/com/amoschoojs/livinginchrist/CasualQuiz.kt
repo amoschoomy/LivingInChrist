@@ -14,7 +14,9 @@ import com.amoschoojs.livinginchrist.networkstream.OnConnectionStatusChanged
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.database.*
 
-
+/**
+ * Casual Quiz activity
+ */
 class CasualQuiz : AppCompatActivity(), QuizHandler {
     private lateinit var database: FirebaseDatabase
     private val arrayList = ArrayList<Quiz>()
@@ -27,8 +29,8 @@ class CasualQuiz : AppCompatActivity(), QuizHandler {
     private lateinit var dataReference: DatabaseReference
     private lateinit var nextButton: Button
     private lateinit var sharedPreferences: SharedPreferences
-    private var count = 0
-    private var answered = false
+    private var count = 0 // count tracker of quiz answered
+    private var answered = false //if user have answered that question
     private lateinit var backgroundTintList: ColorStateList
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,12 +39,16 @@ class CasualQuiz : AppCompatActivity(), QuizHandler {
         sharedPreferences = getSharedPreferences("abc", 0)
         database =
             FirebaseDatabase.getInstance("https://living-in-christ-default-rtdb.asia-southeast1.firebasedatabase.app")
+
+
         try {
-            database.setPersistenceEnabled(true)
+            database.setPersistenceEnabled(true) //enable firebase offline capabilities
         } catch (e: Exception) {
 
         }
-        dataReference = database.reference.child("quizzes")
+
+        dataReference =
+            database.reference.child("quizzes") //get database path to where data stored
 
 
         questionQuiz = findViewById(R.id.questionquiz)
@@ -52,13 +58,20 @@ class CasualQuiz : AppCompatActivity(), QuizHandler {
         choice4 = findViewById(R.id.choice4)
         nextButton = findViewById(R.id.nextq)
         backgroundTintList = choice1.backgroundTintList!!
+
+        //get user data value whether they have connected before to the internet and accessed the quiz
         val connectedBefore = sharedPreferences.getBoolean("connectedBefore", false)
+
         NetworkRequestVerse.checkNetworkInfo(this, object : OnConnectionStatusChanged {
             override fun onChange(type: Boolean) {
                 if (type) {
+                    //if connection exists, connect to database and update user connection history in
+                    // shared preferences
                     checkDatabase()
                     sharedPreferences.edit().putBoolean("connectedBefore", true).apply()
                 } else if (!connectedBefore) {
+
+                    //If no connection history, block user from accessing the quiz
                     Toast.makeText(
                         applicationContext,
                         "Please try again when you have internet connection",
@@ -66,6 +79,7 @@ class CasualQuiz : AppCompatActivity(), QuizHandler {
                     ).show()
                     finish()
                 } else if (connectedBefore) {
+                    //if connected before, there is offline cache stored
                     checkDatabase()
                 }
             }
@@ -107,15 +121,16 @@ class CasualQuiz : AppCompatActivity(), QuizHandler {
                         d.getValue(Quiz::class.java)?.let { arrayList.add(it) }
                     }
                 }
-                arrayList.shuffle()
-                quizDisplay()
-                count += 1
-                handleAnswer()
+
+                arrayList.shuffle() //shuffle arraylist to avoid repetitive ordering
+                quizDisplay() //display quiz to user
+                count += 1 //count increment
+                handleAnswer() //handle answer submitted by users
 
                 nextButton.setOnClickListener {
                     if (answered) {
                         nextQuestion()
-                    } else {
+                    } else { //if user have not answered, warn user if they want to proceed
                         MaterialAlertDialogBuilder(this@CasualQuiz).setMessage(
                             "Do you want to skip? " +
                                     "You have not answered the question."
@@ -175,7 +190,7 @@ class CasualQuiz : AppCompatActivity(), QuizHandler {
             setButtonVal(3, quiz.choice4, list)
 
 
-        } else {
+        } else { //if all question answered, finish the activity
             Toast.makeText(this, "Finished quiz. Thank you for playing", Toast.LENGTH_SHORT).show()
             finish()
         }
@@ -186,8 +201,11 @@ class CasualQuiz : AppCompatActivity(), QuizHandler {
 
     override fun handleAnswer() {
         var answerId: Int? = null
+
+        //animation to shake the correct answer button
         val shake: Animation = AnimationUtils.loadAnimation(this, R.anim.shake)
 
+        // find the res id of answer to the buttons which have been jumbled up previously
         when (answer) {
             choice1.text -> {
                 answerId = choice1.id
@@ -203,18 +221,28 @@ class CasualQuiz : AppCompatActivity(), QuizHandler {
             }
         }
 
+        /*
+        Below codes is to setOnClickListener for each of the button
+        and handle the logic accordingly
+         */
+
         choice1.setOnClickListener {
+
+            //if answer is correct
             if (answerId == choice1.id) {
                 choice1.startAnimation(shake)
+                //paint button user with green
                 choice1.backgroundTintList =
                     this.resources.getColorStateList(R.color.green, this.theme)
 
             } else {
+                //if answer is wrong
                 if (answerId != null) {
                     val button = findViewById<Button>(answerId)
                     button.backgroundTintList =
                         this.resources.getColorStateList(R.color.green, this.theme)
                     button.startAnimation(shake)
+                    //paint the button user clicked with red
                     choice1.backgroundTintList =
                         this.resources.getColorStateList(R.color.red, this.theme)
 

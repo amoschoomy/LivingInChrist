@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
+/**
+ * BookStudy activity
+ */
 class BookStudy : AppCompatActivity() {
 
     private lateinit var books: Array<String>
@@ -81,10 +84,14 @@ class BookStudy : AppCompatActivity() {
             "Jude",
             "Revelations"
         )
+
+        //set the array to the adapter
         val bookRecyclerViewAdapter = BooksRecyclerViewAdapter(books)
         val bookrecview = findViewById<RecyclerView>(R.id.bookrecview)
         val linearLayoutManager = LinearLayoutManager(this)
         bookrecview.layoutManager = linearLayoutManager
+
+        //set adapter to the recycler view
         bookrecview.adapter = bookRecyclerViewAdapter
         bookRecyclerViewAdapter.notifyDataSetChanged()
 

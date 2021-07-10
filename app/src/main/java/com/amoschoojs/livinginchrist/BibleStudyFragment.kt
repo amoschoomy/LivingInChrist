@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 
-
+/**
+ * Fragment class for BibleStudy
+ */
 class BibleStudyFragment : Fragment() {
 
     override fun onCreateView(
@@ -22,14 +24,17 @@ class BibleStudyFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val themeCard = view.findViewById<CardView>(R.id.themecard)
         val bookCard = view.findViewById<CardView>(R.id.bookcard)
 
+        //Start Theme Study activity from Fragment
         themeCard.setOnClickListener {
             val intent = Intent(activity, ThemeStudy::class.java)
             startActivity(intent)
         }
 
+        // Start BookStudy activity from Fragment
         bookCard.setOnClickListener {
             val intent = Intent(activity, BookStudy::class.java)
             startActivity(intent)

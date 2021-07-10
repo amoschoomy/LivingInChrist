@@ -18,17 +18,27 @@ class NetworkRequestVerse {
 
 
     companion object {
+
+        /**
+         * Checks network info and handles connection and disconnection logic
+         *
+         * @param context Context of the application
+         * @param onConnectionStatusChange Handles logic in the event of connection changes
+         */
         fun checkNetworkInfo(
             context: Context,
             onConnectionStatusChange: OnConnectionStatusChanged
         ) {
             val connectivityManager =
                 context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
             val capabilities =
                 connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-            if (capabilities == null) {
+
+            if (capabilities == null) { //No internet connection
                 onConnectionStatusChange.onChange(false)
             }
+
             connectivityManager.registerDefaultNetworkCallback(object : NetworkCallback() {
                 override fun onAvailable(network: Network) {
                     onConnectionStatusChange.onChange(true)
@@ -46,11 +56,16 @@ class NetworkRequestVerse {
         }
 
 
+        /**
+         * Make a request to HTTP protocol to the URL using coroutines
+         * @return [VerseOfTheDay] object
+         */
         suspend fun httpGet(): VerseOfTheDay {
 
             return withContext(Dispatchers.IO) {
-                val inputStream: InputStream
 
+
+                val inputStream: InputStream
 
                 // create URL
                 val url = "http://www.biblegateway.com/votd/get/?format=json&version=NIV"
@@ -62,10 +77,11 @@ class NetworkRequestVerse {
 
                 // make GET request to the given URL
                 conn.connect()
+
                 // receive response as inputStream
                 inputStream = conn.inputStream
 
-
+                // Parse json returned from input stream
                 if (inputStream != null) {
                     val json = parseJSON(inputStream)
                     inputStream.close()
@@ -73,6 +89,7 @@ class NetworkRequestVerse {
                     json
 
                 } else {
+                    //else empty Verse object will be created and passed into VerseOfTheDay object
                     val verse = Verse(
                         "", "", "", "", "", "", "",
                         "", "", "", "", "", "", ""
@@ -87,6 +104,11 @@ class NetworkRequestVerse {
         }
 
 
+        /**
+         * Function to parse JSON from InputStream
+         * @param inputStream InputStream object from HTTP Get
+         * @return [VerseOfTheDay]
+         */
         private fun parseJSON(inputStream: InputStream): VerseOfTheDay {
 
 
